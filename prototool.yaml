@@ -1,0 +1,28 @@
+protoc:
+  version: 3.8.0
+  includes:
+    - /go/src/github.com/grpc-ecosystem/grpc-gateway/third_party/googleapis
+lint:
+  group: google
+generate:
+  # Options that will apply to all plugins of type go and gogo.
+  go_options:
+    # The base import path. This should be the go path of the prototool.yaml file.
+    # This is required if you have any go plugins.
+    import_path: github.com/pbarker/sphere
+
+    # Extra modifiers to include with Mfile=package.
+    extra_modifiers:
+      google/api/annotations.proto: google.golang.org/genproto/googleapis/api/annotations
+      google/api/http.proto: google.golang.org/genproto/googleapis/api/annotations
+  plugins:
+    - name: go
+      type: go
+      flags: plugins=grpc
+      output: ./
+    - name: grpc-gateway
+      type: go
+      output: ./
+    - name: swagger
+      flags: json_names_for_fields=true
+      output: ./

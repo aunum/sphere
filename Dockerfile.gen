@@ -1,0 +1,23 @@
+FROM golang:1.13-buster
+
+RUN apt-get update && \
+    apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    protobuf-compiler \
+    libc6-dev \
+    libprotobuf-dev
+
+ENV GO111MODULE on
+
+RUN go get github.com/uber/prototool/cmd/prototool
+RUN go get github.com/golang/protobuf/protoc-gen-go
+RUN go get google.golang.org/grpc
+
+ENV GO111MODULE off
+
+RUN go get -d github.com/grpc-ecosystem/grpc-gateway/... && \
+    go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway && \
+    go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+
+WORKDIR /go/src/github.com/pbarker/sphere
