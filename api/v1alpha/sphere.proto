@@ -1,0 +1,103 @@
+syntax = "proto3";
+
+package sphere.api.v1alpha;
+
+import "google/api/annotations.proto";
+import "google/protobuf/timestamp.proto";
+
+// The Sphere API.
+service SphereAPI {
+    // Register an environment server.
+    rpc RegisterServer (RegisterServerRequest) returns (RegisterServerResponse) {
+        option (google.api.http) = {
+            post: "/v1alpha/servers"
+            body: "*"
+        };
+    };
+
+    // Get environment server.
+    rpc GetServer (GetServerRequest) returns (GetServerResponse) {
+        option (google.api.http) = {
+            get: "/v1alpha/servers/{id}"
+        };
+    };
+
+    // List environment servers.
+    rpc ListServers (ListServerRequest) returns (ListServerResponse) {
+        option (google.api.http) = {
+            get: "/v1alpha/servers"
+        };
+    };
+
+    // Unregister environment server.
+    rpc UnregisterServer (UnregisterServerRequest) returns (UnregisterServerResponse) {
+        option (google.api.http) = {
+            delete: "/v1alpha/servers/{id}"
+        };
+    };
+
+}
+
+// Request to register a server.
+message RegisterServerRequest {
+    // Server to register.
+    Server server = 1;
+}
+
+// Response from registering a server.
+message RegisterServerResponse {
+    // Server registered.
+    Server server = 1;
+}
+
+// Request to get a server.
+message GetServerRequest {
+    // ID of the server.
+    string id = 1;
+}
+
+// Response from getting a server.
+message GetServerResponse {
+    // Server retrieved.
+    Server server = 1;
+}
+
+// Request to list servers.
+message ListServerRequest {
+}
+
+// Response from listing servers.
+message ListServerResponse {
+    // Servers from listing.
+    repeated Server servers = 1;
+}
+
+// Request to unregister a server.
+message UnregisterServerRequest {
+    // ID of the server.
+    string id = 1;
+}
+
+// Response from unregister a server.
+message UnregisterServerResponse {
+    // Message from unregistering a server.
+    string message = 1;
+}
+
+// An environment server.
+message Server {
+    // Name of the server.
+    string name = 1;
+
+    // Address of the server.
+    string address = 2;
+
+    // Description of the server.
+    string description = 3;
+
+    // Time when the server was created.
+    google.protobuf.Timestamp created_time = 4;
+
+    // ID of the server.
+    string id = 5;
+}

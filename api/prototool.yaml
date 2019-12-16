@@ -19,10 +19,12 @@ generate:
     - name: go
       type: go
       flags: plugins=grpc
-      output: ./
+      output: ./gen/go
     - name: grpc-gateway
       type: go
       output: ./
     - name: swagger
       flags: json_names_for_fields=true
       output: ./
+    - name: python
+      output: ./gen/python

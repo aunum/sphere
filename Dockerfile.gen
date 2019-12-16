@@ -6,7 +6,9 @@ RUN apt-get update && \
     ca-certificates \
     protobuf-compiler \
     libc6-dev \
-    libprotobuf-dev
+    libprotobuf-dev \
+    python \
+    python-pip
 
 ENV GO111MODULE on
 
@@ -19,5 +21,8 @@ ENV GO111MODULE off
 RUN go get -d github.com/grpc-ecosystem/grpc-gateway/... && \
     go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway && \
     go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+
+RUN pip install --pre grpcio
+RUN pip install --pre grpcio-tools
 
 WORKDIR /go/src/github.com/pbarker/sphere
