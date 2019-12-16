@@ -25,6 +25,46 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
+// Episodic rate for capturing video recordings.
+type StartRecordEnvRequest_VideoSamplingRate int32
+
+const (
+	// Record on episodes that are perfect cubes e.g. 0, 1, 8, 27, 64, ... every 1000th
+	StartRecordEnvRequest_CUBIC StartRecordEnvRequest_VideoSamplingRate = 0
+	// Do not record any episodes.
+	StartRecordEnvRequest_NONE StartRecordEnvRequest_VideoSamplingRate = 1
+	// Record every episode.
+	StartRecordEnvRequest_ALL StartRecordEnvRequest_VideoSamplingRate = 2
+	// Record every tenth episode.
+	StartRecordEnvRequest_TENTH StartRecordEnvRequest_VideoSamplingRate = 3
+	// Record every hundredth episode.
+	StartRecordEnvRequest_HUNDRETH StartRecordEnvRequest_VideoSamplingRate = 4
+)
+
+var StartRecordEnvRequest_VideoSamplingRate_name = map[int32]string{
+	0: "CUBIC",
+	1: "NONE",
+	2: "ALL",
+	3: "TENTH",
+	4: "HUNDRETH",
+}
+
+var StartRecordEnvRequest_VideoSamplingRate_value = map[string]int32{
+	"CUBIC":    0,
+	"NONE":     1,
+	"ALL":      2,
+	"TENTH":    3,
+	"HUNDRETH": 4,
+}
+
+func (x StartRecordEnvRequest_VideoSamplingRate) String() string {
+	return proto.EnumName(StartRecordEnvRequest_VideoSamplingRate_name, int32(x))
+}
+
+func (StartRecordEnvRequest_VideoSamplingRate) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_40455ff8f23e70cf, []int{13, 0}
+}
+
 // Response containing info about the environment.
 type InfoResponse struct {
 	// Name of this environment server.
@@ -621,6 +661,197 @@ func (m *StepEnvResponse) GetNextEpisode() *Observation {
 	return nil
 }
 
+// Request to start recording an environment.
+type StartRecordEnvRequest struct {
+	// ID of the environment.
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// Overwrite any existing data.
+	Force bool `protobuf:"varint,2,opt,name=force,proto3" json:"force,omitempty"`
+	// Resume and add to any existing data.
+	Resume bool `protobuf:"varint,3,opt,name=resume,proto3" json:"resume,omitempty"`
+	// Episodic rate for capturing video recordings. Defaults to CUBIC.
+	VideoSamplingRate    StartRecordEnvRequest_VideoSamplingRate `protobuf:"varint,4,opt,name=video_sampling_rate,json=videoSamplingRate,proto3,enum=sphere.api.v1alpha.StartRecordEnvRequest_VideoSamplingRate" json:"video_sampling_rate,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                                `json:"-"`
+	XXX_unrecognized     []byte                                  `json:"-"`
+	XXX_sizecache        int32                                   `json:"-"`
+}
+
+func (m *StartRecordEnvRequest) Reset()         { *m = StartRecordEnvRequest{} }
+func (m *StartRecordEnvRequest) String() string { return proto.CompactTextString(m) }
+func (*StartRecordEnvRequest) ProtoMessage()    {}
+func (*StartRecordEnvRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_40455ff8f23e70cf, []int{13}
+}
+
+func (m *StartRecordEnvRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_StartRecordEnvRequest.Unmarshal(m, b)
+}
+func (m *StartRecordEnvRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_StartRecordEnvRequest.Marshal(b, m, deterministic)
+}
+func (m *StartRecordEnvRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StartRecordEnvRequest.Merge(m, src)
+}
+func (m *StartRecordEnvRequest) XXX_Size() int {
+	return xxx_messageInfo_StartRecordEnvRequest.Size(m)
+}
+func (m *StartRecordEnvRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_StartRecordEnvRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StartRecordEnvRequest proto.InternalMessageInfo
+
+func (m *StartRecordEnvRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *StartRecordEnvRequest) GetForce() bool {
+	if m != nil {
+		return m.Force
+	}
+	return false
+}
+
+func (m *StartRecordEnvRequest) GetResume() bool {
+	if m != nil {
+		return m.Resume
+	}
+	return false
+}
+
+func (m *StartRecordEnvRequest) GetVideoSamplingRate() StartRecordEnvRequest_VideoSamplingRate {
+	if m != nil {
+		return m.VideoSamplingRate
+	}
+	return StartRecordEnvRequest_CUBIC
+}
+
+// Response from beginning to record an environment.
+type StartRecordEnvResponse struct {
+	// Message pertaining to beginning recording.
+	Message              string   `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *StartRecordEnvResponse) Reset()         { *m = StartRecordEnvResponse{} }
+func (m *StartRecordEnvResponse) String() string { return proto.CompactTextString(m) }
+func (*StartRecordEnvResponse) ProtoMessage()    {}
+func (*StartRecordEnvResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_40455ff8f23e70cf, []int{14}
+}
+
+func (m *StartRecordEnvResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_StartRecordEnvResponse.Unmarshal(m, b)
+}
+func (m *StartRecordEnvResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_StartRecordEnvResponse.Marshal(b, m, deterministic)
+}
+func (m *StartRecordEnvResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StartRecordEnvResponse.Merge(m, src)
+}
+func (m *StartRecordEnvResponse) XXX_Size() int {
+	return xxx_messageInfo_StartRecordEnvResponse.Size(m)
+}
+func (m *StartRecordEnvResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_StartRecordEnvResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StartRecordEnvResponse proto.InternalMessageInfo
+
+func (m *StartRecordEnvResponse) GetMessage() string {
+	if m != nil {
+		return m.Message
+	}
+	return ""
+}
+
+// Request to stop recording an environment.
+type StopRecordEnvRequest struct {
+	// ID of the environment.
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *StopRecordEnvRequest) Reset()         { *m = StopRecordEnvRequest{} }
+func (m *StopRecordEnvRequest) String() string { return proto.CompactTextString(m) }
+func (*StopRecordEnvRequest) ProtoMessage()    {}
+func (*StopRecordEnvRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_40455ff8f23e70cf, []int{15}
+}
+
+func (m *StopRecordEnvRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_StopRecordEnvRequest.Unmarshal(m, b)
+}
+func (m *StopRecordEnvRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_StopRecordEnvRequest.Marshal(b, m, deterministic)
+}
+func (m *StopRecordEnvRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StopRecordEnvRequest.Merge(m, src)
+}
+func (m *StopRecordEnvRequest) XXX_Size() int {
+	return xxx_messageInfo_StopRecordEnvRequest.Size(m)
+}
+func (m *StopRecordEnvRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_StopRecordEnvRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StopRecordEnvRequest proto.InternalMessageInfo
+
+func (m *StopRecordEnvRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+// Response from stopping the recording of an environment.
+type StopRecordEnvResponse struct {
+	// Message of the outcome.
+	Message              string   `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *StopRecordEnvResponse) Reset()         { *m = StopRecordEnvResponse{} }
+func (m *StopRecordEnvResponse) String() string { return proto.CompactTextString(m) }
+func (*StopRecordEnvResponse) ProtoMessage()    {}
+func (*StopRecordEnvResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_40455ff8f23e70cf, []int{16}
+}
+
+func (m *StopRecordEnvResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_StopRecordEnvResponse.Unmarshal(m, b)
+}
+func (m *StopRecordEnvResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_StopRecordEnvResponse.Marshal(b, m, deterministic)
+}
+func (m *StopRecordEnvResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_StopRecordEnvResponse.Merge(m, src)
+}
+func (m *StopRecordEnvResponse) XXX_Size() int {
+	return xxx_messageInfo_StopRecordEnvResponse.Size(m)
+}
+func (m *StopRecordEnvResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_StopRecordEnvResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_StopRecordEnvResponse proto.InternalMessageInfo
+
+func (m *StopRecordEnvResponse) GetMessage() string {
+	if m != nil {
+		return m.Message
+	}
+	return ""
+}
+
 // Request for environment results.
 type ResultsRequest struct {
 	// ID of the environment.
@@ -634,7 +865,7 @@ func (m *ResultsRequest) Reset()         { *m = ResultsRequest{} }
 func (m *ResultsRequest) String() string { return proto.CompactTextString(m) }
 func (*ResultsRequest) ProtoMessage()    {}
 func (*ResultsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{13}
+	return fileDescriptor_40455ff8f23e70cf, []int{17}
 }
 
 func (m *ResultsRequest) XXX_Unmarshal(b []byte) error {
@@ -675,7 +906,7 @@ func (m *ResultsResponse) Reset()         { *m = ResultsResponse{} }
 func (m *ResultsResponse) String() string { return proto.CompactTextString(m) }
 func (*ResultsResponse) ProtoMessage()    {}
 func (*ResultsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{14}
+	return fileDescriptor_40455ff8f23e70cf, []int{18}
 }
 
 func (m *ResultsResponse) XXX_Unmarshal(b []byte) error {
@@ -703,86 +934,186 @@ func (m *ResultsResponse) GetVideoIds() []string {
 	return nil
 }
 
-// Request for result video.
-type VideoRequest struct {
+// Request to get a result video.
+type GetVideoRequest struct {
 	// ID of the environment.
-	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// ID of the video.
+	VideoId              string   `protobuf:"bytes,2,opt,name=video_id,json=videoId,proto3" json:"video_id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *VideoRequest) Reset()         { *m = VideoRequest{} }
-func (m *VideoRequest) String() string { return proto.CompactTextString(m) }
-func (*VideoRequest) ProtoMessage()    {}
-func (*VideoRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{15}
+func (m *GetVideoRequest) Reset()         { *m = GetVideoRequest{} }
+func (m *GetVideoRequest) String() string { return proto.CompactTextString(m) }
+func (*GetVideoRequest) ProtoMessage()    {}
+func (*GetVideoRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_40455ff8f23e70cf, []int{19}
 }
 
-func (m *VideoRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_VideoRequest.Unmarshal(m, b)
+func (m *GetVideoRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVideoRequest.Unmarshal(m, b)
 }
-func (m *VideoRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_VideoRequest.Marshal(b, m, deterministic)
+func (m *GetVideoRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVideoRequest.Marshal(b, m, deterministic)
 }
-func (m *VideoRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_VideoRequest.Merge(m, src)
+func (m *GetVideoRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVideoRequest.Merge(m, src)
 }
-func (m *VideoRequest) XXX_Size() int {
-	return xxx_messageInfo_VideoRequest.Size(m)
+func (m *GetVideoRequest) XXX_Size() int {
+	return xxx_messageInfo_GetVideoRequest.Size(m)
 }
-func (m *VideoRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_VideoRequest.DiscardUnknown(m)
+func (m *GetVideoRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVideoRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_VideoRequest proto.InternalMessageInfo
+var xxx_messageInfo_GetVideoRequest proto.InternalMessageInfo
 
-func (m *VideoRequest) GetId() string {
+func (m *GetVideoRequest) GetId() string {
 	if m != nil {
 		return m.Id
 	}
 	return ""
 }
 
+func (m *GetVideoRequest) GetVideoId() string {
+	if m != nil {
+		return m.VideoId
+	}
+	return ""
+}
+
 // Response with chunked result video.
-type VideoResponse struct {
-	// Chunk of video.
+type GetVideoResponse struct {
+	// Chunk of mp4 video.
 	Chunk                []byte   `protobuf:"bytes,1,opt,name=chunk,proto3" json:"chunk,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *VideoResponse) Reset()         { *m = VideoResponse{} }
-func (m *VideoResponse) String() string { return proto.CompactTextString(m) }
-func (*VideoResponse) ProtoMessage()    {}
-func (*VideoResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{16}
+func (m *GetVideoResponse) Reset()         { *m = GetVideoResponse{} }
+func (m *GetVideoResponse) String() string { return proto.CompactTextString(m) }
+func (*GetVideoResponse) ProtoMessage()    {}
+func (*GetVideoResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_40455ff8f23e70cf, []int{20}
 }
 
-func (m *VideoResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_VideoResponse.Unmarshal(m, b)
+func (m *GetVideoResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVideoResponse.Unmarshal(m, b)
 }
-func (m *VideoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_VideoResponse.Marshal(b, m, deterministic)
+func (m *GetVideoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVideoResponse.Marshal(b, m, deterministic)
 }
-func (m *VideoResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_VideoResponse.Merge(m, src)
+func (m *GetVideoResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVideoResponse.Merge(m, src)
 }
-func (m *VideoResponse) XXX_Size() int {
-	return xxx_messageInfo_VideoResponse.Size(m)
+func (m *GetVideoResponse) XXX_Size() int {
+	return xxx_messageInfo_GetVideoResponse.Size(m)
 }
-func (m *VideoResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_VideoResponse.DiscardUnknown(m)
+func (m *GetVideoResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVideoResponse.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_VideoResponse proto.InternalMessageInfo
+var xxx_messageInfo_GetVideoResponse proto.InternalMessageInfo
 
-func (m *VideoResponse) GetChunk() []byte {
+func (m *GetVideoResponse) GetChunk() []byte {
 	if m != nil {
 		return m.Chunk
 	}
 	return nil
+}
+
+// Request to delete a result video.
+type DeleteVideoRequest struct {
+	// ID of the environment.
+	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	// ID of the video.
+	VideoId              string   `protobuf:"bytes,2,opt,name=video_id,json=videoId,proto3" json:"video_id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteVideoRequest) Reset()         { *m = DeleteVideoRequest{} }
+func (m *DeleteVideoRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteVideoRequest) ProtoMessage()    {}
+func (*DeleteVideoRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_40455ff8f23e70cf, []int{21}
+}
+
+func (m *DeleteVideoRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteVideoRequest.Unmarshal(m, b)
+}
+func (m *DeleteVideoRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteVideoRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteVideoRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteVideoRequest.Merge(m, src)
+}
+func (m *DeleteVideoRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteVideoRequest.Size(m)
+}
+func (m *DeleteVideoRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteVideoRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteVideoRequest proto.InternalMessageInfo
+
+func (m *DeleteVideoRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *DeleteVideoRequest) GetVideoId() string {
+	if m != nil {
+		return m.VideoId
+	}
+	return ""
+}
+
+// Response from deleting a video.
+type DeleteVideoResponse struct {
+	// Message from deletion.
+	Message              string   `protobuf:"bytes,1,opt,name=message,proto3" json:"message,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteVideoResponse) Reset()         { *m = DeleteVideoResponse{} }
+func (m *DeleteVideoResponse) String() string { return proto.CompactTextString(m) }
+func (*DeleteVideoResponse) ProtoMessage()    {}
+func (*DeleteVideoResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_40455ff8f23e70cf, []int{22}
+}
+
+func (m *DeleteVideoResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteVideoResponse.Unmarshal(m, b)
+}
+func (m *DeleteVideoResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteVideoResponse.Marshal(b, m, deterministic)
+}
+func (m *DeleteVideoResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteVideoResponse.Merge(m, src)
+}
+func (m *DeleteVideoResponse) XXX_Size() int {
+	return xxx_messageInfo_DeleteVideoResponse.Size(m)
+}
+func (m *DeleteVideoResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteVideoResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteVideoResponse proto.InternalMessageInfo
+
+func (m *DeleteVideoResponse) GetMessage() string {
+	if m != nil {
+		return m.Message
+	}
+	return ""
 }
 
 // Request to delete an environment.
@@ -798,7 +1129,7 @@ func (m *DeleteEnvRequest) Reset()         { *m = DeleteEnvRequest{} }
 func (m *DeleteEnvRequest) String() string { return proto.CompactTextString(m) }
 func (*DeleteEnvRequest) ProtoMessage()    {}
 func (*DeleteEnvRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{17}
+	return fileDescriptor_40455ff8f23e70cf, []int{23}
 }
 
 func (m *DeleteEnvRequest) XXX_Unmarshal(b []byte) error {
@@ -839,7 +1170,7 @@ func (m *DeleteEnvResponse) Reset()         { *m = DeleteEnvResponse{} }
 func (m *DeleteEnvResponse) String() string { return proto.CompactTextString(m) }
 func (*DeleteEnvResponse) ProtoMessage()    {}
 func (*DeleteEnvResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{18}
+	return fileDescriptor_40455ff8f23e70cf, []int{24}
 }
 
 func (m *DeleteEnvResponse) XXX_Unmarshal(b []byte) error {
@@ -867,215 +1198,6 @@ func (m *DeleteEnvResponse) GetMessage() string {
 	return ""
 }
 
-// Request to watch an environment.
-type WatchEnvRequest struct {
-	// ID of the environment.
-	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *WatchEnvRequest) Reset()         { *m = WatchEnvRequest{} }
-func (m *WatchEnvRequest) String() string { return proto.CompactTextString(m) }
-func (*WatchEnvRequest) ProtoMessage()    {}
-func (*WatchEnvRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{19}
-}
-
-func (m *WatchEnvRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_WatchEnvRequest.Unmarshal(m, b)
-}
-func (m *WatchEnvRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_WatchEnvRequest.Marshal(b, m, deterministic)
-}
-func (m *WatchEnvRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_WatchEnvRequest.Merge(m, src)
-}
-func (m *WatchEnvRequest) XXX_Size() int {
-	return xxx_messageInfo_WatchEnvRequest.Size(m)
-}
-func (m *WatchEnvRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_WatchEnvRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_WatchEnvRequest proto.InternalMessageInfo
-
-func (m *WatchEnvRequest) GetId() string {
-	if m != nil {
-		return m.Id
-	}
-	return ""
-}
-
-// Response from watching an environment.
-type WatchEnvResponse struct {
-	// Observation after step.
-	Observation *Observation `protobuf:"bytes,1,opt,name=observation,proto3" json:"observation,omitempty"`
-	// Reware after step.
-	Reward float32 `protobuf:"fixed32,2,opt,name=reward,proto3" json:"reward,omitempty"`
-	// Observation for next episode.
-	NextEpisode          *Observation `protobuf:"bytes,3,opt,name=next_episode,json=nextEpisode,proto3" json:"next_episode,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
-	XXX_unrecognized     []byte       `json:"-"`
-	XXX_sizecache        int32        `json:"-"`
-}
-
-func (m *WatchEnvResponse) Reset()         { *m = WatchEnvResponse{} }
-func (m *WatchEnvResponse) String() string { return proto.CompactTextString(m) }
-func (*WatchEnvResponse) ProtoMessage()    {}
-func (*WatchEnvResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{20}
-}
-
-func (m *WatchEnvResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_WatchEnvResponse.Unmarshal(m, b)
-}
-func (m *WatchEnvResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_WatchEnvResponse.Marshal(b, m, deterministic)
-}
-func (m *WatchEnvResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_WatchEnvResponse.Merge(m, src)
-}
-func (m *WatchEnvResponse) XXX_Size() int {
-	return xxx_messageInfo_WatchEnvResponse.Size(m)
-}
-func (m *WatchEnvResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_WatchEnvResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_WatchEnvResponse proto.InternalMessageInfo
-
-func (m *WatchEnvResponse) GetObservation() *Observation {
-	if m != nil {
-		return m.Observation
-	}
-	return nil
-}
-
-func (m *WatchEnvResponse) GetReward() float32 {
-	if m != nil {
-		return m.Reward
-	}
-	return 0
-}
-
-func (m *WatchEnvResponse) GetNextEpisode() *Observation {
-	if m != nil {
-		return m.NextEpisode
-	}
-	return nil
-}
-
-// Request to interact in an environment.
-type InteractEnvRequest struct {
-	// ID of the environment.
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	// Step with given value.
-	Value                int32    `protobuf:"varint,2,opt,name=value,proto3" json:"value,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *InteractEnvRequest) Reset()         { *m = InteractEnvRequest{} }
-func (m *InteractEnvRequest) String() string { return proto.CompactTextString(m) }
-func (*InteractEnvRequest) ProtoMessage()    {}
-func (*InteractEnvRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{21}
-}
-
-func (m *InteractEnvRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_InteractEnvRequest.Unmarshal(m, b)
-}
-func (m *InteractEnvRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_InteractEnvRequest.Marshal(b, m, deterministic)
-}
-func (m *InteractEnvRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_InteractEnvRequest.Merge(m, src)
-}
-func (m *InteractEnvRequest) XXX_Size() int {
-	return xxx_messageInfo_InteractEnvRequest.Size(m)
-}
-func (m *InteractEnvRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_InteractEnvRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_InteractEnvRequest proto.InternalMessageInfo
-
-func (m *InteractEnvRequest) GetId() string {
-	if m != nil {
-		return m.Id
-	}
-	return ""
-}
-
-func (m *InteractEnvRequest) GetValue() int32 {
-	if m != nil {
-		return m.Value
-	}
-	return 0
-}
-
-// Response from interacting in an environment.
-type InteractEnvResponse struct {
-	// Observation after step.
-	Observation *Observation `protobuf:"bytes,1,opt,name=observation,proto3" json:"observation,omitempty"`
-	// Reware after step.
-	Reward float32 `protobuf:"fixed32,2,opt,name=reward,proto3" json:"reward,omitempty"`
-	// Observation for next episode.
-	NextEpisode          *Observation `protobuf:"bytes,3,opt,name=next_episode,json=nextEpisode,proto3" json:"next_episode,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}     `json:"-"`
-	XXX_unrecognized     []byte       `json:"-"`
-	XXX_sizecache        int32        `json:"-"`
-}
-
-func (m *InteractEnvResponse) Reset()         { *m = InteractEnvResponse{} }
-func (m *InteractEnvResponse) String() string { return proto.CompactTextString(m) }
-func (*InteractEnvResponse) ProtoMessage()    {}
-func (*InteractEnvResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{22}
-}
-
-func (m *InteractEnvResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_InteractEnvResponse.Unmarshal(m, b)
-}
-func (m *InteractEnvResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_InteractEnvResponse.Marshal(b, m, deterministic)
-}
-func (m *InteractEnvResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_InteractEnvResponse.Merge(m, src)
-}
-func (m *InteractEnvResponse) XXX_Size() int {
-	return xxx_messageInfo_InteractEnvResponse.Size(m)
-}
-func (m *InteractEnvResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_InteractEnvResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_InteractEnvResponse proto.InternalMessageInfo
-
-func (m *InteractEnvResponse) GetObservation() *Observation {
-	if m != nil {
-		return m.Observation
-	}
-	return nil
-}
-
-func (m *InteractEnvResponse) GetReward() float32 {
-	if m != nil {
-		return m.Reward
-	}
-	return 0
-}
-
-func (m *InteractEnvResponse) GetNextEpisode() *Observation {
-	if m != nil {
-		return m.NextEpisode
-	}
-	return nil
-}
-
 // Observation of environment.
 type Observation struct {
 	// Data from environment.
@@ -1091,7 +1213,7 @@ func (m *Observation) Reset()         { *m = Observation{} }
 func (m *Observation) String() string { return proto.CompactTextString(m) }
 func (*Observation) ProtoMessage()    {}
 func (*Observation) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{23}
+	return fileDescriptor_40455ff8f23e70cf, []int{25}
 }
 
 func (m *Observation) XXX_Unmarshal(b []byte) error {
@@ -1141,7 +1263,7 @@ func (m *Environment) Reset()         { *m = Environment{} }
 func (m *Environment) String() string { return proto.CompactTextString(m) }
 func (*Environment) ProtoMessage()    {}
 func (*Environment) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{24}
+	return fileDescriptor_40455ff8f23e70cf, []int{26}
 }
 
 func (m *Environment) XXX_Unmarshal(b []byte) error {
@@ -1176,7 +1298,7 @@ func (m *Environment) GetId() string {
 	return ""
 }
 
-// Model environments can be created from.
+// Model which environments can be created from.
 type Model struct {
 	// Name of the model.
 	Name string `protobuf:"bytes,1,opt,name=name,proto3" json:"name,omitempty"`
@@ -1191,7 +1313,7 @@ func (m *Model) Reset()         { *m = Model{} }
 func (m *Model) String() string { return proto.CompactTextString(m) }
 func (*Model) ProtoMessage()    {}
 func (*Model) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{25}
+	return fileDescriptor_40455ff8f23e70cf, []int{27}
 }
 
 func (m *Model) XXX_Unmarshal(b []byte) error {
@@ -1237,7 +1359,7 @@ func (m *Empty) Reset()         { *m = Empty{} }
 func (m *Empty) String() string { return proto.CompactTextString(m) }
 func (*Empty) ProtoMessage()    {}
 func (*Empty) Descriptor() ([]byte, []int) {
-	return fileDescriptor_40455ff8f23e70cf, []int{26}
+	return fileDescriptor_40455ff8f23e70cf, []int{28}
 }
 
 func (m *Empty) XXX_Unmarshal(b []byte) error {
@@ -1259,6 +1381,7 @@ func (m *Empty) XXX_DiscardUnknown() {
 var xxx_messageInfo_Empty proto.InternalMessageInfo
 
 func init() {
+	proto.RegisterEnum("sphere.api.v1alpha.StartRecordEnvRequest_VideoSamplingRate", StartRecordEnvRequest_VideoSamplingRate_name, StartRecordEnvRequest_VideoSamplingRate_value)
 	proto.RegisterType((*InfoResponse)(nil), "sphere.api.v1alpha.InfoResponse")
 	proto.RegisterType((*CreateEnvRequest)(nil), "sphere.api.v1alpha.CreateEnvRequest")
 	proto.RegisterType((*CreateEnvResponse)(nil), "sphere.api.v1alpha.CreateEnvResponse")
@@ -1272,16 +1395,18 @@ func init() {
 	proto.RegisterType((*ResetEnvResponse)(nil), "sphere.api.v1alpha.ResetEnvResponse")
 	proto.RegisterType((*StepEnvRequest)(nil), "sphere.api.v1alpha.StepEnvRequest")
 	proto.RegisterType((*StepEnvResponse)(nil), "sphere.api.v1alpha.StepEnvResponse")
+	proto.RegisterType((*StartRecordEnvRequest)(nil), "sphere.api.v1alpha.StartRecordEnvRequest")
+	proto.RegisterType((*StartRecordEnvResponse)(nil), "sphere.api.v1alpha.StartRecordEnvResponse")
+	proto.RegisterType((*StopRecordEnvRequest)(nil), "sphere.api.v1alpha.StopRecordEnvRequest")
+	proto.RegisterType((*StopRecordEnvResponse)(nil), "sphere.api.v1alpha.StopRecordEnvResponse")
 	proto.RegisterType((*ResultsRequest)(nil), "sphere.api.v1alpha.ResultsRequest")
 	proto.RegisterType((*ResultsResponse)(nil), "sphere.api.v1alpha.ResultsResponse")
-	proto.RegisterType((*VideoRequest)(nil), "sphere.api.v1alpha.VideoRequest")
-	proto.RegisterType((*VideoResponse)(nil), "sphere.api.v1alpha.VideoResponse")
+	proto.RegisterType((*GetVideoRequest)(nil), "sphere.api.v1alpha.GetVideoRequest")
+	proto.RegisterType((*GetVideoResponse)(nil), "sphere.api.v1alpha.GetVideoResponse")
+	proto.RegisterType((*DeleteVideoRequest)(nil), "sphere.api.v1alpha.DeleteVideoRequest")
+	proto.RegisterType((*DeleteVideoResponse)(nil), "sphere.api.v1alpha.DeleteVideoResponse")
 	proto.RegisterType((*DeleteEnvRequest)(nil), "sphere.api.v1alpha.DeleteEnvRequest")
 	proto.RegisterType((*DeleteEnvResponse)(nil), "sphere.api.v1alpha.DeleteEnvResponse")
-	proto.RegisterType((*WatchEnvRequest)(nil), "sphere.api.v1alpha.WatchEnvRequest")
-	proto.RegisterType((*WatchEnvResponse)(nil), "sphere.api.v1alpha.WatchEnvResponse")
-	proto.RegisterType((*InteractEnvRequest)(nil), "sphere.api.v1alpha.InteractEnvRequest")
-	proto.RegisterType((*InteractEnvResponse)(nil), "sphere.api.v1alpha.InteractEnvResponse")
 	proto.RegisterType((*Observation)(nil), "sphere.api.v1alpha.Observation")
 	proto.RegisterType((*Environment)(nil), "sphere.api.v1alpha.Environment")
 	proto.RegisterType((*Model)(nil), "sphere.api.v1alpha.Model")
@@ -1291,67 +1416,82 @@ func init() {
 func init() { proto.RegisterFile("v1alpha/env.proto", fileDescriptor_40455ff8f23e70cf) }
 
 var fileDescriptor_40455ff8f23e70cf = []byte{
-	// 955 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xd4, 0x56, 0x5f, 0x6f, 0x1b, 0x45,
-	0x10, 0xd7, 0x39, 0xb1, 0x13, 0x8f, 0x13, 0xff, 0x59, 0x02, 0x75, 0xaf, 0x2d, 0x71, 0x36, 0x0d,
-	0x8a, 0x82, 0xb0, 0x49, 0x2b, 0x81, 0x54, 0x01, 0x52, 0x28, 0xa1, 0x8a, 0xc4, 0x3f, 0x5d, 0x05,
-	0x48, 0xbc, 0x58, 0x5b, 0xdf, 0x24, 0x3e, 0xea, 0xdb, 0x3b, 0x6e, 0xd7, 0x47, 0x00, 0xf1, 0x82,
-	0xc4, 0x23, 0x4f, 0x7c, 0x11, 0x90, 0xf8, 0x26, 0x7c, 0x05, 0x3e, 0x08, 0xda, 0xbd, 0xb5, 0x7d,
-	0xe7, 0xac, 0x2f, 0x05, 0xf5, 0x25, 0x6f, 0xb7, 0xb3, 0xbf, 0x99, 0xdf, 0xcc, 0xce, 0xec, 0xfe,
-	0x0e, 0x3a, 0xe9, 0x31, 0x9b, 0xc4, 0x63, 0x36, 0x40, 0x9e, 0xf6, 0xe3, 0x24, 0x92, 0x11, 0x21,
-	0x22, 0x1e, 0x63, 0x82, 0x7d, 0x16, 0x07, 0x7d, 0xb3, 0xeb, 0xde, 0xbd, 0x88, 0xa2, 0x8b, 0x09,
-	0x0e, 0x58, 0x1c, 0x0c, 0x18, 0xe7, 0x91, 0x64, 0x32, 0x88, 0xb8, 0xc8, 0x3c, 0xe8, 0x00, 0xb6,
-	0xce, 0xf8, 0x79, 0xe4, 0xa1, 0x88, 0x23, 0x2e, 0x90, 0xec, 0x42, 0x43, 0x60, 0x92, 0x62, 0x32,
-	0xe4, 0x2c, 0xc4, 0xae, 0xd3, 0x73, 0x0e, 0xeb, 0x1e, 0x64, 0xa6, 0xcf, 0x58, 0x88, 0xf4, 0x18,
-	0xda, 0x8f, 0x13, 0x64, 0x12, 0x4f, 0x79, 0xea, 0xe1, 0x77, 0x53, 0x14, 0x92, 0xdc, 0x03, 0x08,
-	0x23, 0x1f, 0x27, 0x79, 0x9f, 0xba, 0xb6, 0x68, 0x97, 0xdf, 0x1c, 0xe8, 0xe4, 0x7c, 0x0c, 0xd3,
-	0x9b, 0xd0, 0x89, 0x9e, 0xa9, 0xc0, 0x3a, 0x9f, 0xa1, 0x18, 0xb3, 0x58, 0xf9, 0xae, 0x1d, 0x56,
-	0xbd, 0x76, 0x6e, 0xe3, 0xa9, 0xb2, 0xab, 0xb4, 0xf8, 0x34, 0x1c, 0xb2, 0x91, 0xce, 0xbd, 0x5b,
-	0xe9, 0x39, 0x87, 0x55, 0x0f, 0xf8, 0x34, 0x3c, 0xc9, 0x2c, 0xe4, 0x08, 0x3a, 0x21, 0xbb, 0x1c,
-	0x62, 0x1c, 0x88, 0xc8, 0xc7, 0xa1, 0x90, 0x18, 0x8b, 0xee, 0x9a, 0x86, 0xb5, 0x42, 0x76, 0x79,
-	0x9a, 0xd9, 0x9f, 0x2a, 0x33, 0xfd, 0x00, 0x9a, 0x9f, 0x04, 0x42, 0xe6, 0x0a, 0xd8, 0x81, 0xea,
-	0x24, 0x08, 0x03, 0xa9, 0x73, 0xaf, 0x7a, 0xd9, 0x82, 0xbc, 0x06, 0xb5, 0xe8, 0xfc, 0x5c, 0xa0,
-	0x34, 0x7c, 0x66, 0x45, 0x3f, 0x86, 0xd6, 0xdc, 0xdf, 0x14, 0xf3, 0x10, 0xd6, 0x91, 0xa7, 0x42,
-	0xe7, 0xdf, 0x78, 0xb0, 0xdb, 0xbf, 0xda, 0x87, 0xfe, 0x29, 0x4f, 0x83, 0x24, 0xe2, 0x21, 0x72,
-	0xe9, 0x69, 0x30, 0xdd, 0x85, 0xed, 0x27, 0x98, 0x4f, 0xa3, 0x09, 0x95, 0xc0, 0x37, 0xe7, 0x57,
-	0x09, 0x7c, 0xfa, 0x18, 0x9a, 0x33, 0x80, 0xe1, 0x39, 0x86, 0x35, 0xe4, 0xa9, 0x86, 0xbc, 0x00,
-	0x8d, 0xc2, 0xd2, 0x13, 0xe8, 0xa8, 0x6c, 0x3f, 0x55, 0xed, 0x10, 0xff, 0xaf, 0xe0, 0x27, 0x40,
-	0xf2, 0x21, 0xe6, 0xb9, 0xd4, 0x74, 0x8f, 0x67, 0x55, 0xdf, 0xb6, 0xa5, 0xa3, 0x7d, 0x3c, 0x03,
-	0xa4, 0x7b, 0xd0, 0xf2, 0x50, 0x94, 0xd6, 0xfc, 0x25, 0xb4, 0x17, 0x10, 0xc3, 0x74, 0x02, 0x8d,
-	0xdc, 0x44, 0x94, 0x55, 0xff, 0xf9, 0x02, 0xe6, 0xe5, 0x7d, 0xe8, 0x3b, 0xd0, 0x54, 0xcd, 0x5f,
-	0x4d, 0xac, 0x8e, 0x24, 0x65, 0x93, 0x29, 0x9a, 0xda, 0xb3, 0x05, 0xfd, 0xc3, 0x81, 0xd6, 0xdc,
-	0xf1, 0xa5, 0xa5, 0xa3, 0x4e, 0x3a, 0xc1, 0xef, 0x59, 0xe2, 0x6b, 0xb6, 0x8a, 0x67, 0x56, 0xe4,
-	0x43, 0xd8, 0xe2, 0x78, 0x29, 0x67, 0x73, 0xac, 0x27, 0xf8, 0x45, 0x62, 0x2b, 0x27, 0x33, 0xe3,
-	0xb4, 0x07, 0x4d, 0x0f, 0xc5, 0x74, 0x22, 0xc5, 0xaa, 0x33, 0xee, 0xeb, 0x36, 0x64, 0x08, 0x53,
-	0xd3, 0x1d, 0xa8, 0xa7, 0x81, 0x8f, 0xd1, 0x30, 0xf0, 0xb3, 0x7e, 0xd6, 0xbd, 0x4d, 0x6d, 0x38,
-	0xf3, 0x05, 0x7d, 0x1d, 0xb6, 0xbe, 0x52, 0xdf, 0xab, 0xe2, 0x1d, 0xc0, 0xb6, 0xd9, 0x37, 0xd1,
-	0x76, 0xa0, 0x3a, 0x1a, 0x4f, 0xf9, 0x73, 0x8d, 0xd9, 0xf2, 0xb2, 0x05, 0xa5, 0xd0, 0xfe, 0x08,
-	0x27, 0x58, 0x78, 0x3a, 0x96, 0x43, 0xbd, 0x05, 0x9d, 0x1c, 0xc6, 0x84, 0xeb, 0xc2, 0x46, 0x88,
-	0x42, 0xb0, 0x8b, 0xd9, 0xe3, 0x32, 0x5b, 0xaa, 0x81, 0xfa, 0x9a, 0xc9, 0xd1, 0xb8, 0x24, 0xe2,
-	0x9f, 0x0e, 0xb4, 0x17, 0x98, 0x9b, 0xd1, 0xc2, 0x47, 0x40, 0xce, 0xb8, 0xc4, 0x84, 0x8d, 0xe4,
-	0x7f, 0x9e, 0xd8, 0xbf, 0x1c, 0x78, 0xa5, 0xe0, 0x7c, 0x33, 0x4a, 0x7e, 0x17, 0x1a, 0xb9, 0x3d,
-	0x42, 0x60, 0xdd, 0x67, 0x92, 0xe9, 0x51, 0xac, 0x78, 0xfa, 0x5b, 0xd5, 0x9b, 0xa9, 0x44, 0x45,
-	0xab, 0x44, 0xb6, 0xa0, 0xef, 0x41, 0x23, 0xf7, 0xe6, 0x5d, 0xa3, 0x45, 0xe6, 0x0c, 0x2b, 0xf3,
-	0xe9, 0x78, 0x1f, 0xaa, 0xfa, 0x89, 0x52, 0x84, 0x39, 0x0f, 0xfd, 0x4d, 0x7a, 0xd0, 0xf0, 0x51,
-	0x8c, 0x92, 0x20, 0xd6, 0x47, 0x96, 0x79, 0xe5, 0x4d, 0x74, 0x03, 0xaa, 0xa7, 0x61, 0x2c, 0x7f,
-	0x78, 0xf0, 0x6b, 0x1d, 0x9a, 0xb9, 0x34, 0x4e, 0xbe, 0x38, 0x23, 0xdf, 0xc0, 0xba, 0x92, 0x56,
-	0x62, 0x7d, 0x17, 0xb5, 0x97, 0xdb, 0xb3, 0x6d, 0xe5, 0xf5, 0x98, 0xbe, 0xfa, 0xcb, 0xdf, 0xff,
-	0xfc, 0x5e, 0x69, 0x91, 0xed, 0xc1, 0x4c, 0xed, 0x03, 0x15, 0x33, 0x81, 0xfa, 0x5c, 0x51, 0xc9,
-	0x7d, 0x5b, 0x94, 0x65, 0x91, 0x76, 0x0f, 0xae, 0x41, 0x19, 0xc2, 0xae, 0x26, 0x24, 0x74, 0x41,
-	0xa8, 0xb4, 0xea, 0x91, 0x73, 0x44, 0xbe, 0x85, 0x4d, 0x23, 0x7b, 0x82, 0x50, 0x5b, 0xb0, 0xa2,
-	0xa8, 0xba, 0xfb, 0xa5, 0x98, 0x95, 0xf5, 0x29, 0x3a, 0x22, 0x01, 0x16, 0x8a, 0x43, 0x0e, 0x56,
-	0x45, 0x2a, 0x88, 0x9a, 0xfb, 0xc6, 0x75, 0x30, 0xc3, 0x79, 0x4b, 0x73, 0x76, 0x48, 0x6b, 0xce,
-	0x99, 0xc9, 0x13, 0x79, 0x0e, 0xb5, 0x4c, 0x6f, 0xc9, 0x9e, 0x2d, 0x54, 0x41, 0xac, 0x5d, 0x5a,
-	0x06, 0x31, 0x4c, 0xae, 0x66, 0xda, 0x21, 0xa4, 0x50, 0xdd, 0xe0, 0xa7, 0xc0, 0xff, 0x99, 0xfc,
-	0x08, 0x9b, 0x33, 0xa1, 0x23, 0xd6, 0xa3, 0x5a, 0x52, 0x4a, 0xf7, 0x7e, 0x39, 0xc8, 0x50, 0xee,
-	0x6b, 0xca, 0x7b, 0x6e, 0xf7, 0x2a, 0xe5, 0x20, 0x51, 0x60, 0xd5, 0xca, 0x14, 0x36, 0x8c, 0xa8,
-	0xd9, 0x3b, 0x59, 0x94, 0x4a, 0x7b, 0x27, 0x97, 0x54, 0x91, 0x52, 0x4d, 0x7c, 0x97, 0xde, 0xb2,
-	0x10, 0xab, 0xdf, 0x31, 0xc3, 0x6b, 0x84, 0xc7, 0xce, 0x5b, 0xd4, 0x2d, 0x77, 0xbf, 0x14, 0x53,
-	0xe4, 0x25, 0xae, 0xbd, 0x60, 0x4d, 0x96, 0x40, 0x4d, 0x0b, 0x94, 0x20, 0xd6, 0x1b, 0x97, 0x17,
-	0x37, 0x77, 0xaf, 0x04, 0x61, 0x28, 0xf7, 0x34, 0xe5, 0x1d, 0x72, 0xdb, 0x42, 0xa9, 0x45, 0x53,
-	0xbc, 0xed, 0x10, 0x09, 0xf5, 0xb9, 0x92, 0xd9, 0xaf, 0xe8, 0xb2, 0x18, 0xda, 0xaf, 0xe8, 0x15,
-	0x39, 0x9c, 0x4d, 0xd5, 0x91, 0x65, 0xaa, 0x9e, 0xd5, 0xf4, 0x6f, 0xfd, 0xc3, 0x7f, 0x03, 0x00,
-	0x00, 0xff, 0xff, 0x8d, 0x50, 0x85, 0x69, 0x1d, 0x0c, 0x00, 0x00,
+	// 1187 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x57, 0xdd, 0x72, 0x1b, 0x35,
+	0x14, 0x66, 0x1d, 0x3b, 0xb1, 0x8f, 0x13, 0xff, 0xa8, 0x69, 0xeb, 0x2e, 0x2d, 0x71, 0x95, 0xa4,
+	0x38, 0xee, 0x60, 0x93, 0x74, 0x06, 0x66, 0xa0, 0xc0, 0xa4, 0xa9, 0x49, 0xc2, 0x84, 0x94, 0x51,
+	0x12, 0x2e, 0xb8, 0xf1, 0xa8, 0x59, 0x25, 0x59, 0xe2, 0xfd, 0x61, 0x25, 0x9b, 0x40, 0xa7, 0x37,
+	0x0c, 0x77, 0x0c, 0x70, 0xd1, 0x17, 0xe1, 0x49, 0xb8, 0xe1, 0x15, 0x78, 0x10, 0x46, 0x5a, 0xd9,
+	0x59, 0xdb, 0x8a, 0xed, 0xe9, 0x70, 0x67, 0x69, 0xbf, 0x73, 0xbe, 0xef, 0x9c, 0xa3, 0xd5, 0xb7,
+	0x86, 0x72, 0x6f, 0x93, 0x76, 0xc2, 0x0b, 0xda, 0x64, 0x7e, 0xaf, 0x11, 0x46, 0x81, 0x08, 0x10,
+	0xe2, 0xe1, 0x05, 0x8b, 0x58, 0x83, 0x86, 0x6e, 0x43, 0x3f, 0xb5, 0xef, 0x9f, 0x07, 0xc1, 0x79,
+	0x87, 0x35, 0x69, 0xe8, 0x36, 0xa9, 0xef, 0x07, 0x82, 0x0a, 0x37, 0xf0, 0x79, 0x1c, 0x81, 0x9b,
+	0xb0, 0xb8, 0xef, 0x9f, 0x05, 0x84, 0xf1, 0x30, 0xf0, 0x39, 0x43, 0x2b, 0x90, 0xe7, 0x2c, 0xea,
+	0xb1, 0xa8, 0xed, 0x53, 0x8f, 0x55, 0xac, 0xaa, 0x55, 0xcb, 0x11, 0x88, 0xb7, 0x0e, 0xa9, 0xc7,
+	0xf0, 0x26, 0x94, 0x76, 0x22, 0x46, 0x05, 0x6b, 0xf9, 0x3d, 0xc2, 0x7e, 0xe8, 0x32, 0x2e, 0xd0,
+	0x03, 0x00, 0x2f, 0x70, 0x58, 0x27, 0x19, 0x93, 0x53, 0x3b, 0x2a, 0xe4, 0x77, 0x0b, 0xca, 0x89,
+	0x18, 0xcd, 0xf4, 0x18, 0xca, 0xc1, 0x4b, 0x99, 0x58, 0xe9, 0x69, 0xf3, 0x0b, 0x1a, 0xca, 0xd8,
+	0xb9, 0x5a, 0x86, 0x94, 0x12, 0x0f, 0x8e, 0xe4, 0xbe, 0x94, 0xe5, 0x77, 0xbd, 0x36, 0x3d, 0x55,
+	0xda, 0x2b, 0xa9, 0xaa, 0x55, 0xcb, 0x10, 0xf0, 0xbb, 0xde, 0x76, 0xbc, 0x83, 0xea, 0x50, 0xf6,
+	0xe8, 0x55, 0x9b, 0x85, 0x2e, 0x0f, 0x1c, 0xd6, 0xe6, 0x82, 0x85, 0xbc, 0x32, 0xa7, 0x60, 0x45,
+	0x8f, 0x5e, 0xb5, 0xe2, 0xfd, 0x23, 0xb9, 0x8d, 0x3f, 0x87, 0xc2, 0x81, 0xcb, 0x45, 0xa2, 0x80,
+	0x65, 0xc8, 0x74, 0x5c, 0xcf, 0x15, 0x4a, 0x7b, 0x86, 0xc4, 0x0b, 0x74, 0x07, 0xe6, 0x83, 0xb3,
+	0x33, 0xce, 0x84, 0xe6, 0xd3, 0x2b, 0xfc, 0x25, 0x14, 0x07, 0xf1, 0xba, 0x98, 0x27, 0x90, 0x66,
+	0x7e, 0x8f, 0x2b, 0xfd, 0xf9, 0xad, 0x95, 0xc6, 0xf8, 0x1c, 0x1a, 0x2d, 0xbf, 0xe7, 0x46, 0x81,
+	0xef, 0x31, 0x5f, 0x10, 0x05, 0xc6, 0x2b, 0xb0, 0xb4, 0xcb, 0x92, 0x32, 0x0a, 0x90, 0x72, 0x1d,
+	0xdd, 0xbf, 0x94, 0xeb, 0xe0, 0x1d, 0x28, 0xf4, 0x01, 0x9a, 0x67, 0x13, 0xe6, 0x98, 0xdf, 0x53,
+	0x90, 0x19, 0x68, 0x24, 0x16, 0x6f, 0x43, 0x59, 0xaa, 0xfd, 0x5a, 0x8e, 0x83, 0xbf, 0x5d, 0xc1,
+	0xbb, 0x80, 0x92, 0x29, 0x06, 0x5a, 0xe6, 0xd5, 0x8c, 0xfb, 0x55, 0xdf, 0x33, 0xc9, 0x51, 0x31,
+	0x44, 0x03, 0xf1, 0x43, 0x28, 0x12, 0xc6, 0x27, 0xd6, 0x7c, 0x02, 0xa5, 0x6b, 0x88, 0x66, 0xda,
+	0x86, 0x7c, 0xe2, 0x44, 0x4c, 0xaa, 0xfe, 0xc5, 0x35, 0x8c, 0x24, 0x63, 0xf0, 0x47, 0x50, 0x90,
+	0xc3, 0xbf, 0x99, 0x58, 0xb6, 0xa4, 0x47, 0x3b, 0x5d, 0xa6, 0x6b, 0x8f, 0x17, 0xf8, 0x2f, 0x0b,
+	0x8a, 0x83, 0xc0, 0xff, 0x4d, 0x8e, 0xec, 0x74, 0xc4, 0x7e, 0xa4, 0x91, 0xa3, 0xd8, 0x52, 0x44,
+	0xaf, 0xd0, 0x33, 0x58, 0xf4, 0xd9, 0x95, 0xe8, 0x9f, 0x63, 0x75, 0x82, 0x67, 0xc9, 0x2d, 0x83,
+	0xf4, 0x19, 0xc7, 0x7f, 0xa4, 0xe0, 0xf6, 0x91, 0xa0, 0x91, 0x20, 0xec, 0x34, 0x88, 0x9c, 0xc9,
+	0x25, 0x9f, 0x05, 0xd1, 0x69, 0x5c, 0x72, 0x96, 0xc4, 0x8b, 0x58, 0x1b, 0xef, 0x7a, 0x31, 0x7b,
+	0x96, 0xe8, 0x15, 0xba, 0x84, 0x5b, 0x3d, 0xd7, 0x61, 0x41, 0x9b, 0x53, 0x2f, 0xec, 0xb8, 0xfe,
+	0x79, 0x3b, 0xa2, 0x82, 0x55, 0xd2, 0x55, 0xab, 0x56, 0xd8, 0xfa, 0xd4, 0x24, 0xd1, 0xa8, 0xa2,
+	0xf1, 0xad, 0x4c, 0x72, 0xa4, 0x73, 0x10, 0x2a, 0x18, 0x29, 0xf7, 0x46, 0xb7, 0xf0, 0x57, 0x50,
+	0x1e, 0xc3, 0xa1, 0x1c, 0x64, 0x76, 0x4e, 0x9e, 0xed, 0xef, 0x94, 0xde, 0x41, 0x59, 0x48, 0x1f,
+	0xbe, 0x38, 0x6c, 0x95, 0x2c, 0xb4, 0x00, 0x73, 0xdb, 0x07, 0x07, 0xa5, 0x94, 0x7c, 0x7a, 0xdc,
+	0x3a, 0x3c, 0xde, 0x2b, 0xcd, 0xa1, 0x45, 0xc8, 0xee, 0x9d, 0x1c, 0x3e, 0x27, 0xad, 0xe3, 0xbd,
+	0x52, 0x1a, 0x6f, 0xc1, 0x9d, 0x51, 0x25, 0x7a, 0x92, 0x15, 0x58, 0xf0, 0x18, 0xe7, 0xf4, 0xbc,
+	0x7f, 0x6b, 0xf5, 0x97, 0xf8, 0x11, 0x2c, 0x1f, 0x89, 0x20, 0x9c, 0xd6, 0x42, 0xbc, 0x29, 0x7b,
+	0x3d, 0x84, 0x9b, 0x9a, 0xba, 0x0a, 0x05, 0xc2, 0x78, 0xb7, 0x23, 0xf8, 0x4d, 0x49, 0x1b, 0xea,
+	0x35, 0x89, 0x11, 0x3a, 0xdd, 0xbb, 0x90, 0x8b, 0x9b, 0xef, 0x3a, 0xf1, 0xfb, 0x96, 0x23, 0x59,
+	0xb5, 0xb1, 0xef, 0x70, 0xfc, 0x14, 0x8a, 0xbb, 0x4c, 0xa8, 0x7e, 0xdd, 0x34, 0xea, 0x7b, 0x90,
+	0xed, 0xc7, 0xab, 0x69, 0xe7, 0xc8, 0x82, 0x0e, 0xc7, 0x35, 0x28, 0x5d, 0x47, 0x6b, 0xba, 0x65,
+	0xc8, 0x9c, 0x5e, 0x74, 0xfd, 0x4b, 0x95, 0x61, 0x91, 0xc4, 0x0b, 0xfc, 0x05, 0xa0, 0xe7, 0xac,
+	0xc3, 0x04, 0x7b, 0x5b, 0xaa, 0x26, 0xdc, 0x1a, 0x4a, 0x30, 0xb5, 0x57, 0x18, 0x4a, 0x71, 0xc0,
+	0x84, 0x11, 0x7c, 0x00, 0xe5, 0x04, 0x66, 0x6a, 0xca, 0x8f, 0x21, 0x9f, 0x78, 0x75, 0x10, 0x82,
+	0xb4, 0x43, 0x05, 0x55, 0x3d, 0x4d, 0x11, 0xf5, 0x5b, 0x56, 0x1f, 0xdb, 0x51, 0x4a, 0xd9, 0x51,
+	0xbc, 0xc0, 0x4f, 0x21, 0x9f, 0xb8, 0x5c, 0xa7, 0x98, 0x9e, 0x56, 0x99, 0x1a, 0xa8, 0xfc, 0x0c,
+	0x32, 0xea, 0x2e, 0x94, 0x84, 0x89, 0x08, 0xf5, 0x1b, 0x55, 0x21, 0xef, 0x30, 0x7e, 0x1a, 0xb9,
+	0xa1, 0xba, 0x51, 0xe2, 0xa8, 0xe4, 0x16, 0x5e, 0x80, 0x4c, 0xcb, 0x0b, 0xc5, 0x4f, 0x5b, 0x7f,
+	0x2f, 0x42, 0x21, 0x21, 0x63, 0xfb, 0x9b, 0x7d, 0xf4, 0x1d, 0xa4, 0xa5, 0x87, 0x23, 0xe3, 0x05,
+	0xac, 0xa2, 0xec, 0xaa, 0xe9, 0x51, 0xd2, 0xf8, 0xf1, 0xed, 0x5f, 0xfe, 0xf9, 0xf7, 0x4d, 0xaa,
+	0x88, 0x96, 0x9a, 0xfd, 0xcf, 0x0a, 0x57, 0xe6, 0x8c, 0x20, 0x37, 0xb0, 0x6e, 0xb4, 0x66, 0xca,
+	0x32, 0xfa, 0x35, 0x60, 0xaf, 0x4f, 0x41, 0x69, 0xc2, 0x8a, 0x22, 0x44, 0xf8, 0x9a, 0x50, 0x9a,
+	0xe2, 0x27, 0x56, 0x1d, 0x7d, 0x0f, 0x59, 0xed, 0xaf, 0x1c, 0x61, 0x53, 0xb2, 0x61, 0xf7, 0xb6,
+	0x57, 0x27, 0x62, 0x6e, 0xac, 0x4f, 0xd2, 0x21, 0x01, 0x70, 0x6d, 0x6d, 0x68, 0xfd, 0xa6, 0x4c,
+	0x43, 0xee, 0x69, 0x3f, 0x9a, 0x06, 0xd3, 0x9c, 0x77, 0x15, 0x67, 0x19, 0x15, 0x07, 0x9c, 0xb1,
+	0x0f, 0xa2, 0x4b, 0x98, 0x8f, 0x8d, 0x1d, 0x3d, 0x34, 0xa5, 0x1a, 0xfa, 0x2a, 0xb0, 0xf1, 0x24,
+	0x88, 0x66, 0xb2, 0x15, 0xd3, 0x32, 0x42, 0x43, 0xd5, 0x35, 0x5f, 0xb9, 0xce, 0x6b, 0xf4, 0x33,
+	0x64, 0xfb, 0x8e, 0x8a, 0x8c, 0xad, 0x1a, 0xb1, 0x64, 0x7b, 0x6d, 0x32, 0x48, 0x53, 0xae, 0x2a,
+	0xca, 0x07, 0x76, 0x65, 0x9c, 0xb2, 0x19, 0x49, 0xb0, 0x1c, 0x65, 0x0f, 0x16, 0xb4, 0x7b, 0x9a,
+	0x27, 0x39, 0xec, 0xc9, 0xe6, 0x49, 0x8e, 0xd8, 0x2f, 0xc6, 0x8a, 0xf8, 0x3e, 0xbe, 0x6b, 0x20,
+	0x96, 0xdf, 0x7d, 0x92, 0xf7, 0x8d, 0x25, 0xfd, 0x3e, 0x79, 0xe7, 0xa3, 0x8d, 0x99, 0x1d, 0xca,
+	0xae, 0xcf, 0x02, 0xd5, 0x6a, 0xea, 0x4a, 0xcd, 0x1a, 0x5e, 0x31, 0xb6, 0x41, 0xa2, 0x9b, 0x5c,
+	0x46, 0x4a, 0x55, 0x7f, 0x5a, 0xb0, 0x34, 0xe4, 0x16, 0xa8, 0x66, 0x66, 0x1a, 0x37, 0x1e, 0x7b,
+	0x63, 0x06, 0xa4, 0x96, 0xb4, 0xa1, 0x24, 0xad, 0xe2, 0xf7, 0x26, 0x49, 0x0a, 0x42, 0x3d, 0x1f,
+	0xed, 0x34, 0xe6, 0xf9, 0x0c, 0x1b, 0x95, 0xbd, 0x3a, 0x11, 0x33, 0x3c, 0x1f, 0x64, 0x9b, 0x0f,
+	0x86, 0x22, 0xfb, 0xd5, 0x82, 0x6c, 0xdf, 0x74, 0xcc, 0x87, 0x72, 0xc4, 0xd0, 0xcc, 0x87, 0x72,
+	0xd4, 0xb7, 0xf0, 0x63, 0xc5, 0xbd, 0x8e, 0x56, 0x0d, 0xdc, 0xca, 0x84, 0x9a, 0xaf, 0xfa, 0xde,
+	0xf4, 0xfa, 0x43, 0x0b, 0xfd, 0x66, 0x41, 0x3e, 0x61, 0x48, 0xc8, 0xf8, 0x62, 0x8f, 0x5b, 0x9e,
+	0xfd, 0xfe, 0x54, 0xdc, 0xb0, 0x9e, 0xfa, 0x2c, 0x7a, 0x90, 0x80, 0xdc, 0xc0, 0xc8, 0xcc, 0x77,
+	0xed, 0xa8, 0x17, 0x9a, 0xef, 0xda, 0x31, 0x37, 0xec, 0x5f, 0x0f, 0x75, 0xc3, 0xf5, 0xf0, 0x72,
+	0x5e, 0xfd, 0x11, 0x7c, 0xf2, 0x5f, 0x00, 0x00, 0x00, 0xff, 0xff, 0xbb, 0x69, 0x83, 0xca, 0x4f,
+	0x0e, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1380,11 +1520,17 @@ type EnvironmentAPIClient interface {
 	ResetEnv(ctx context.Context, in *ResetEnvRequest, opts ...grpc.CallOption) (*ResetEnvResponse, error)
 	// Step through an environment.
 	StepEnv(ctx context.Context, in *StepEnvRequest, opts ...grpc.CallOption) (*StepEnvResponse, error)
+	// Start recording an environment.
+	StartRecordEnv(ctx context.Context, in *StartRecordEnvRequest, opts ...grpc.CallOption) (*StartRecordEnvResponse, error)
+	// Stop recording an environment.
+	StopRecordEnv(ctx context.Context, in *StopRecordEnvRequest, opts ...grpc.CallOption) (*StopRecordEnvResponse, error)
 	// Results from the environment.
 	Results(ctx context.Context, in *ResultsRequest, opts ...grpc.CallOption) (*ResultsResponse, error)
-	// Stream result videos.
-	Videos(ctx context.Context, in *VideoRequest, opts ...grpc.CallOption) (EnvironmentAPI_VideosClient, error)
-	// Delete environment
+	// Stream result video.
+	GetVideo(ctx context.Context, in *GetVideoRequest, opts ...grpc.CallOption) (EnvironmentAPI_GetVideoClient, error)
+	// Delete a result video.
+	DeleteVideo(ctx context.Context, in *DeleteVideoRequest, opts ...grpc.CallOption) (*DeleteVideoResponse, error)
+	// Delete an environment.
 	DeleteEnv(ctx context.Context, in *DeleteEnvRequest, opts ...grpc.CallOption) (*DeleteEnvResponse, error)
 }
 
@@ -1459,6 +1605,24 @@ func (c *environmentAPIClient) StepEnv(ctx context.Context, in *StepEnvRequest, 
 	return out, nil
 }
 
+func (c *environmentAPIClient) StartRecordEnv(ctx context.Context, in *StartRecordEnvRequest, opts ...grpc.CallOption) (*StartRecordEnvResponse, error) {
+	out := new(StartRecordEnvResponse)
+	err := c.cc.Invoke(ctx, "/sphere.api.v1alpha.EnvironmentAPI/StartRecordEnv", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *environmentAPIClient) StopRecordEnv(ctx context.Context, in *StopRecordEnvRequest, opts ...grpc.CallOption) (*StopRecordEnvResponse, error) {
+	out := new(StopRecordEnvResponse)
+	err := c.cc.Invoke(ctx, "/sphere.api.v1alpha.EnvironmentAPI/StopRecordEnv", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *environmentAPIClient) Results(ctx context.Context, in *ResultsRequest, opts ...grpc.CallOption) (*ResultsResponse, error) {
 	out := new(ResultsResponse)
 	err := c.cc.Invoke(ctx, "/sphere.api.v1alpha.EnvironmentAPI/Results", in, out, opts...)
@@ -1468,12 +1632,12 @@ func (c *environmentAPIClient) Results(ctx context.Context, in *ResultsRequest, 
 	return out, nil
 }
 
-func (c *environmentAPIClient) Videos(ctx context.Context, in *VideoRequest, opts ...grpc.CallOption) (EnvironmentAPI_VideosClient, error) {
-	stream, err := c.cc.NewStream(ctx, &_EnvironmentAPI_serviceDesc.Streams[0], "/sphere.api.v1alpha.EnvironmentAPI/Videos", opts...)
+func (c *environmentAPIClient) GetVideo(ctx context.Context, in *GetVideoRequest, opts ...grpc.CallOption) (EnvironmentAPI_GetVideoClient, error) {
+	stream, err := c.cc.NewStream(ctx, &_EnvironmentAPI_serviceDesc.Streams[0], "/sphere.api.v1alpha.EnvironmentAPI/GetVideo", opts...)
 	if err != nil {
 		return nil, err
 	}
-	x := &environmentAPIVideosClient{stream}
+	x := &environmentAPIGetVideoClient{stream}
 	if err := x.ClientStream.SendMsg(in); err != nil {
 		return nil, err
 	}
@@ -1483,21 +1647,30 @@ func (c *environmentAPIClient) Videos(ctx context.Context, in *VideoRequest, opt
 	return x, nil
 }
 
-type EnvironmentAPI_VideosClient interface {
-	Recv() (*VideoResponse, error)
+type EnvironmentAPI_GetVideoClient interface {
+	Recv() (*GetVideoResponse, error)
 	grpc.ClientStream
 }
 
-type environmentAPIVideosClient struct {
+type environmentAPIGetVideoClient struct {
 	grpc.ClientStream
 }
 
-func (x *environmentAPIVideosClient) Recv() (*VideoResponse, error) {
-	m := new(VideoResponse)
+func (x *environmentAPIGetVideoClient) Recv() (*GetVideoResponse, error) {
+	m := new(GetVideoResponse)
 	if err := x.ClientStream.RecvMsg(m); err != nil {
 		return nil, err
 	}
 	return m, nil
+}
+
+func (c *environmentAPIClient) DeleteVideo(ctx context.Context, in *DeleteVideoRequest, opts ...grpc.CallOption) (*DeleteVideoResponse, error) {
+	out := new(DeleteVideoResponse)
+	err := c.cc.Invoke(ctx, "/sphere.api.v1alpha.EnvironmentAPI/DeleteVideo", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *environmentAPIClient) DeleteEnv(ctx context.Context, in *DeleteEnvRequest, opts ...grpc.CallOption) (*DeleteEnvResponse, error) {
@@ -1525,11 +1698,17 @@ type EnvironmentAPIServer interface {
 	ResetEnv(context.Context, *ResetEnvRequest) (*ResetEnvResponse, error)
 	// Step through an environment.
 	StepEnv(context.Context, *StepEnvRequest) (*StepEnvResponse, error)
+	// Start recording an environment.
+	StartRecordEnv(context.Context, *StartRecordEnvRequest) (*StartRecordEnvResponse, error)
+	// Stop recording an environment.
+	StopRecordEnv(context.Context, *StopRecordEnvRequest) (*StopRecordEnvResponse, error)
 	// Results from the environment.
 	Results(context.Context, *ResultsRequest) (*ResultsResponse, error)
-	// Stream result videos.
-	Videos(*VideoRequest, EnvironmentAPI_VideosServer) error
-	// Delete environment
+	// Stream result video.
+	GetVideo(*GetVideoRequest, EnvironmentAPI_GetVideoServer) error
+	// Delete a result video.
+	DeleteVideo(context.Context, *DeleteVideoRequest) (*DeleteVideoResponse, error)
+	// Delete an environment.
 	DeleteEnv(context.Context, *DeleteEnvRequest) (*DeleteEnvResponse, error)
 }
 
@@ -1558,11 +1737,20 @@ func (*UnimplementedEnvironmentAPIServer) ResetEnv(ctx context.Context, req *Res
 func (*UnimplementedEnvironmentAPIServer) StepEnv(ctx context.Context, req *StepEnvRequest) (*StepEnvResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method StepEnv not implemented")
 }
+func (*UnimplementedEnvironmentAPIServer) StartRecordEnv(ctx context.Context, req *StartRecordEnvRequest) (*StartRecordEnvResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StartRecordEnv not implemented")
+}
+func (*UnimplementedEnvironmentAPIServer) StopRecordEnv(ctx context.Context, req *StopRecordEnvRequest) (*StopRecordEnvResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method StopRecordEnv not implemented")
+}
 func (*UnimplementedEnvironmentAPIServer) Results(ctx context.Context, req *ResultsRequest) (*ResultsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method Results not implemented")
 }
-func (*UnimplementedEnvironmentAPIServer) Videos(req *VideoRequest, srv EnvironmentAPI_VideosServer) error {
-	return status.Errorf(codes.Unimplemented, "method Videos not implemented")
+func (*UnimplementedEnvironmentAPIServer) GetVideo(req *GetVideoRequest, srv EnvironmentAPI_GetVideoServer) error {
+	return status.Errorf(codes.Unimplemented, "method GetVideo not implemented")
+}
+func (*UnimplementedEnvironmentAPIServer) DeleteVideo(ctx context.Context, req *DeleteVideoRequest) (*DeleteVideoResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteVideo not implemented")
 }
 func (*UnimplementedEnvironmentAPIServer) DeleteEnv(ctx context.Context, req *DeleteEnvRequest) (*DeleteEnvResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteEnv not implemented")
@@ -1698,6 +1886,42 @@ func _EnvironmentAPI_StepEnv_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
+func _EnvironmentAPI_StartRecordEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StartRecordEnvRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EnvironmentAPIServer).StartRecordEnv(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sphere.api.v1alpha.EnvironmentAPI/StartRecordEnv",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EnvironmentAPIServer).StartRecordEnv(ctx, req.(*StartRecordEnvRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _EnvironmentAPI_StopRecordEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(StopRecordEnvRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EnvironmentAPIServer).StopRecordEnv(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sphere.api.v1alpha.EnvironmentAPI/StopRecordEnv",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EnvironmentAPIServer).StopRecordEnv(ctx, req.(*StopRecordEnvRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _EnvironmentAPI_Results_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ResultsRequest)
 	if err := dec(in); err != nil {
@@ -1716,25 +1940,43 @@ func _EnvironmentAPI_Results_Handler(srv interface{}, ctx context.Context, dec f
 	return interceptor(ctx, in, info, handler)
 }
 
-func _EnvironmentAPI_Videos_Handler(srv interface{}, stream grpc.ServerStream) error {
-	m := new(VideoRequest)
+func _EnvironmentAPI_GetVideo_Handler(srv interface{}, stream grpc.ServerStream) error {
+	m := new(GetVideoRequest)
 	if err := stream.RecvMsg(m); err != nil {
 		return err
 	}
-	return srv.(EnvironmentAPIServer).Videos(m, &environmentAPIVideosServer{stream})
+	return srv.(EnvironmentAPIServer).GetVideo(m, &environmentAPIGetVideoServer{stream})
 }
 
-type EnvironmentAPI_VideosServer interface {
-	Send(*VideoResponse) error
+type EnvironmentAPI_GetVideoServer interface {
+	Send(*GetVideoResponse) error
 	grpc.ServerStream
 }
 
-type environmentAPIVideosServer struct {
+type environmentAPIGetVideoServer struct {
 	grpc.ServerStream
 }
 
-func (x *environmentAPIVideosServer) Send(m *VideoResponse) error {
+func (x *environmentAPIGetVideoServer) Send(m *GetVideoResponse) error {
 	return x.ServerStream.SendMsg(m)
+}
+
+func _EnvironmentAPI_DeleteVideo_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteVideoRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(EnvironmentAPIServer).DeleteVideo(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/sphere.api.v1alpha.EnvironmentAPI/DeleteVideo",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(EnvironmentAPIServer).DeleteVideo(ctx, req.(*DeleteVideoRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _EnvironmentAPI_DeleteEnv_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1788,8 +2030,20 @@ var _EnvironmentAPI_serviceDesc = grpc.ServiceDesc{
 			Handler:    _EnvironmentAPI_StepEnv_Handler,
 		},
 		{
+			MethodName: "StartRecordEnv",
+			Handler:    _EnvironmentAPI_StartRecordEnv_Handler,
+		},
+		{
+			MethodName: "StopRecordEnv",
+			Handler:    _EnvironmentAPI_StopRecordEnv_Handler,
+		},
+		{
 			MethodName: "Results",
 			Handler:    _EnvironmentAPI_Results_Handler,
+		},
+		{
+			MethodName: "DeleteVideo",
+			Handler:    _EnvironmentAPI_DeleteVideo_Handler,
 		},
 		{
 			MethodName: "DeleteEnv",
@@ -1798,8 +2052,8 @@ var _EnvironmentAPI_serviceDesc = grpc.ServiceDesc{
 	},
 	Streams: []grpc.StreamDesc{
 		{
-			StreamName:    "Videos",
-			Handler:       _EnvironmentAPI_Videos_Handler,
+			StreamName:    "GetVideo",
+			Handler:       _EnvironmentAPI_GetVideo_Handler,
 			ServerStreams: true,
 		},
 	},

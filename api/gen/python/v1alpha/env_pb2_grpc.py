@@ -49,15 +49,30 @@ class EnvironmentAPIStub(object):
         request_serializer=env__pb2.StepEnvRequest.SerializeToString,
         response_deserializer=env__pb2.StepEnvResponse.FromString,
         )
+    self.StartRecordEnv = channel.unary_unary(
+        '/sphere.api.v1alpha.EnvironmentAPI/StartRecordEnv',
+        request_serializer=env__pb2.StartRecordEnvRequest.SerializeToString,
+        response_deserializer=env__pb2.StartRecordEnvResponse.FromString,
+        )
+    self.StopRecordEnv = channel.unary_unary(
+        '/sphere.api.v1alpha.EnvironmentAPI/StopRecordEnv',
+        request_serializer=env__pb2.StopRecordEnvRequest.SerializeToString,
+        response_deserializer=env__pb2.StopRecordEnvResponse.FromString,
+        )
     self.Results = channel.unary_unary(
         '/sphere.api.v1alpha.EnvironmentAPI/Results',
         request_serializer=env__pb2.ResultsRequest.SerializeToString,
         response_deserializer=env__pb2.ResultsResponse.FromString,
         )
-    self.Videos = channel.unary_stream(
-        '/sphere.api.v1alpha.EnvironmentAPI/Videos',
-        request_serializer=env__pb2.VideoRequest.SerializeToString,
-        response_deserializer=env__pb2.VideoResponse.FromString,
+    self.GetVideo = channel.unary_stream(
+        '/sphere.api.v1alpha.EnvironmentAPI/GetVideo',
+        request_serializer=env__pb2.GetVideoRequest.SerializeToString,
+        response_deserializer=env__pb2.GetVideoResponse.FromString,
+        )
+    self.DeleteVideo = channel.unary_unary(
+        '/sphere.api.v1alpha.EnvironmentAPI/DeleteVideo',
+        request_serializer=env__pb2.DeleteVideoRequest.SerializeToString,
+        response_deserializer=env__pb2.DeleteVideoResponse.FromString,
         )
     self.DeleteEnv = channel.unary_unary(
         '/sphere.api.v1alpha.EnvironmentAPI/DeleteEnv',
@@ -119,6 +134,20 @@ class EnvironmentAPIServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def StartRecordEnv(self, request, context):
+    """Start recording an environment.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def StopRecordEnv(self, request, context):
+    """Stop recording an environment.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def Results(self, request, context):
     """Results from the environment.
     """
@@ -126,15 +155,22 @@ class EnvironmentAPIServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
-  def Videos(self, request, context):
-    """Stream result videos.
+  def GetVideo(self, request, context):
+    """Stream result video.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+  def DeleteVideo(self, request, context):
+    """Delete a result video.
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
   def DeleteEnv(self, request, context):
-    """Delete environment
+    """Delete an environment.
     """
     context.set_code(grpc.StatusCode.UNIMPLEMENTED)
     context.set_details('Method not implemented!')
@@ -178,15 +214,30 @@ def add_EnvironmentAPIServicer_to_server(servicer, server):
           request_deserializer=env__pb2.StepEnvRequest.FromString,
           response_serializer=env__pb2.StepEnvResponse.SerializeToString,
       ),
+      'StartRecordEnv': grpc.unary_unary_rpc_method_handler(
+          servicer.StartRecordEnv,
+          request_deserializer=env__pb2.StartRecordEnvRequest.FromString,
+          response_serializer=env__pb2.StartRecordEnvResponse.SerializeToString,
+      ),
+      'StopRecordEnv': grpc.unary_unary_rpc_method_handler(
+          servicer.StopRecordEnv,
+          request_deserializer=env__pb2.StopRecordEnvRequest.FromString,
+          response_serializer=env__pb2.StopRecordEnvResponse.SerializeToString,
+      ),
       'Results': grpc.unary_unary_rpc_method_handler(
           servicer.Results,
           request_deserializer=env__pb2.ResultsRequest.FromString,
           response_serializer=env__pb2.ResultsResponse.SerializeToString,
       ),
-      'Videos': grpc.unary_stream_rpc_method_handler(
-          servicer.Videos,
-          request_deserializer=env__pb2.VideoRequest.FromString,
-          response_serializer=env__pb2.VideoResponse.SerializeToString,
+      'GetVideo': grpc.unary_stream_rpc_method_handler(
+          servicer.GetVideo,
+          request_deserializer=env__pb2.GetVideoRequest.FromString,
+          response_serializer=env__pb2.GetVideoResponse.SerializeToString,
+      ),
+      'DeleteVideo': grpc.unary_unary_rpc_method_handler(
+          servicer.DeleteVideo,
+          request_deserializer=env__pb2.DeleteVideoRequest.FromString,
+          response_serializer=env__pb2.DeleteVideoResponse.SerializeToString,
       ),
       'DeleteEnv': grpc.unary_unary_rpc_method_handler(
           servicer.DeleteEnv,
