@@ -559,15 +559,15 @@ func request_EnvironmentAPI_GetVideo_0(ctx context.Context, marshaler runtime.Ma
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
-	val, ok = pathParams["video_id"]
+	val, ok = pathParams["episode_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "video_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "episode_id")
 	}
 
-	protoReq.VideoId, err = runtime.String(val)
+	protoReq.EpisodeId, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "video_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "episode_id", err)
 	}
 
 	stream, err := client.GetVideo(ctx, &protoReq)
@@ -605,15 +605,15 @@ func request_EnvironmentAPI_DeleteVideo_0(ctx context.Context, marshaler runtime
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
-	val, ok = pathParams["video_id"]
+	val, ok = pathParams["episode_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "video_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "episode_id")
 	}
 
-	protoReq.VideoId, err = runtime.String(val)
+	protoReq.EpisodeId, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "video_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "episode_id", err)
 	}
 
 	msg, err := client.DeleteVideo(ctx, &protoReq, grpc.Header(&metadata.HeaderMD), grpc.Trailer(&metadata.TrailerMD))
@@ -643,15 +643,15 @@ func local_request_EnvironmentAPI_DeleteVideo_0(ctx context.Context, marshaler r
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "id", err)
 	}
 
-	val, ok = pathParams["video_id"]
+	val, ok = pathParams["episode_id"]
 	if !ok {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "video_id")
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "episode_id")
 	}
 
-	protoReq.VideoId, err = runtime.String(val)
+	protoReq.EpisodeId, err = runtime.String(val)
 
 	if err != nil {
-		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "video_id", err)
+		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "episode_id", err)
 	}
 
 	msg, err := server.DeleteVideo(ctx, &protoReq)
@@ -1290,9 +1290,9 @@ var (
 
 	pattern_EnvironmentAPI_Results_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3}, []string{"v1alpha", "envs", "id", "results"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_EnvironmentAPI_GetVideo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1alpha", "envs", "id", "video", "video_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_EnvironmentAPI_GetVideo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1alpha", "envs", "id", "video", "episode_id"}, "", runtime.AssumeColonVerbOpt(true)))
 
-	pattern_EnvironmentAPI_DeleteVideo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1alpha", "envs", "id", "video", "video_id"}, "", runtime.AssumeColonVerbOpt(true)))
+	pattern_EnvironmentAPI_DeleteVideo_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2, 2, 3, 1, 0, 4, 1, 5, 4}, []string{"v1alpha", "envs", "id", "video", "episode_id"}, "", runtime.AssumeColonVerbOpt(true)))
 
 	pattern_EnvironmentAPI_DeleteEnv_0 = runtime.MustPattern(runtime.NewPattern(1, []int{2, 0, 2, 1, 1, 0, 4, 1, 5, 2}, []string{"v1alpha", "envs", "id"}, "", runtime.AssumeColonVerbOpt(true)))
 )

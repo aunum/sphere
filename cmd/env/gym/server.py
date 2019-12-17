@@ -3,15 +3,52 @@ from time import sleep
 import gym
 import grpc
 import uuid
+import os
+
+import sys
+sys.path.append("../../../api/gen/python/v1alpha")
 
 from . import config
-from ../../api/gen/python/env_pb2 import *
-from ../../api/gen/python/env_pb2_grpc import EnvironmentAPIServicer, add_EnvironmentAPIServicer_to_server as register
+from env_pb2 import *
+from env_pb2_grpc import EnvironmentAPIServicer, add_EnvironmentAPIServicer_to_server as register
 
+results_base_dir = "./results" 
 
 def encode_observation(observation):
     return Observation(data=observation.ravel(), shape=observation.shape)
 
+def get_results_dir(env_id):
+    return os.path.join(results_base_dir, env_id)
+
+def get_results(env_id):
+    dir = get_results_dir(env_id)
+    results = ResultsResponse()
+    videos = {}
+    for (root, dirnames, filenames) in os.walk(dir):
+        for i, f in enumerate(filenames):
+            if "stats.json" in f:
+                episodes = {}
+                stats_file = os.path.join(root, f)
+                with open(stats_file) as json_file:
+                    data = json.load(json_file)
+                    timestamps = data["timestamps"]
+                    for i, t in enumerate(timestamps):
+                        er = EpisodeResult(episode_id=i, timestamp=t)
+                        episodes[i] = er
+                    ep_lengths = data["episode_lengths"]
+                    for i, l in enumerate(ep_lengths):
+                        episodes[i].episode_length = l
+                    ep_rewards = data["episode_rewards"]
+                    for i, r in enumerate(ep_rewards):
+                        episodes[i].reward = r
+                results.episode_results = episodes
+            if "meta.json" in f:
+                video_file = os.path.join(root, f)
+                with open(video_file) as json_file:
+                    data = json.load(json_file)
+                    videos[data.episode_id] = Video(episode_id=data.episode_id, content_type=data.content_type)
+    return results
+            
 
 class EnvironmentServer(EnvironmentAPIServicer):
     def __init__(self):
@@ -58,27 +95,48 @@ class EnvironmentServer(EnvironmentAPIServicer):
                           reward=reward,
                           next_episode=next_episode))
 
+    def StartRecordEnv(self, request, context):
+        env = self.envs[request.id]
+        switcher={
+            0: None,
+            1: lambda episode_id: False,
+            2: lambda episode_id: True,
+            3: lambda episode_id: episode_id%10==0,
+            4: lambda episode_id: episode_id%100==0,
+        }
+        val = StartRecordingRequest.VideoSamplingRate.Value(request.video_sampling_rate)
+        rate = switcher.get(val,"Invalid sample rate")
+        results_dir = get_results_dir(request.id)
+        self.envs[request.id] = gym.wrappers.Monitor(self.envs[request.id], results_dir, force=request.force, resume=request.resume, video_callable=rate, uid=request.id) 
+
+    def StopRecordEnv(self, request, context):
+        env = self.envs[request.id]
+        env.close()
+
     # relevent https://stackoverflow.com/questions/40195740/how-to-run-openai-gym-render-over-a-server
     def Results(self, request, context):
-        """Results from the environment.
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
 
-    def Videos(self, request, context):
-        """Stream result videos.
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+
+    def GetVideo(self, request, context):
+    """Stream result video.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
+    def DeleteVideo(self, request, context):
+    """Delete a result video.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
 
     def DeleteEnv(self, request, context):
-        """Delete environment
-        """
-        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-        context.set_details('Method not implemented!')
-        raise NotImplementedError('Method not implemented!')
+    """Delete an environment.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
 
     def Make(self, name, _):
         name = name.value

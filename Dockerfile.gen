@@ -22,6 +22,7 @@ RUN go get -d github.com/grpc-ecosystem/grpc-gateway/... && \
     go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway && \
     go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
 
+
 RUN pip install --pre grpcio
 RUN pip install --pre grpcio-tools
 
