@@ -2,13 +2,13 @@ from concurrent import futures
 from time import sleep
 import gym
 import grpc
+import json
 import uuid
 import os
 
 import sys
 sys.path.append("../../../api/gen/python/v1alpha")
 
-from . import config
 from env_pb2 import *
 from env_pb2_grpc import EnvironmentAPIServicer, add_EnvironmentAPIServicer_to_server as register
 
@@ -24,7 +24,7 @@ def get_results(env_id):
     dir = get_results_dir(env_id)
     results = ResultsResponse()
     videos = {}
-    for (root, dirnames, filenames) in os.walk(dir):
+    for (root, _, filenames) in os.walk(dir):
         for i, f in enumerate(filenames):
             if "stats.json" in f:
                 episodes = {}
@@ -48,7 +48,6 @@ def get_results(env_id):
                     data = json.load(json_file)
                     videos[data.episode_id] = Video(episode_id=data.episode_id, content_type=data.content_type)
     return results
-            
 
 class EnvironmentServer(EnvironmentAPIServicer):
     def __init__(self):
@@ -104,10 +103,10 @@ class EnvironmentServer(EnvironmentAPIServicer):
             3: lambda episode_id: episode_id%10==0,
             4: lambda episode_id: episode_id%100==0,
         }
-        val = StartRecordingRequest.VideoSamplingRate.Value(request.video_sampling_rate)
+        val = StartRecordRequest.VideoSamplingRate.Value(request.video_sampling_rate)
         rate = switcher.get(val,"Invalid sample rate")
         results_dir = get_results_dir(request.id)
-        self.envs[request.id] = gym.wrappers.Monitor(self.envs[request.id], results_dir, force=request.force, resume=request.resume, video_callable=rate, uid=request.id) 
+        self.envs[request.id] = gym.wrappers.Monitor(env, results_dir, force=request.force, resume=request.resume, video_callable=rate, uid=request.id) 
 
     def StopRecordEnv(self, request, context):
         env = self.envs[request.id]
@@ -115,56 +114,58 @@ class EnvironmentServer(EnvironmentAPIServicer):
 
     # relevent https://stackoverflow.com/questions/40195740/how-to-run-openai-gym-render-over-a-server
     def Results(self, request, context):
-
+        return get_results(request.env_id)
 
     def GetVideo(self, request, context):
-    """Stream result video.
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
+        chunk_size=1024
+        dir = get_results_dir(request.env_id)
+        video_file = ""
+        for (root, _, filenames) in os.walk(dir):
+            for f in filenames:
+                filesuffix = "video" + str(request.episode_id).zfill(6) + ".mp4"
+                if filesuffix in f:
+                    video_file = os.path.join(root, f)
+
+        if video_file == "":
+            context.set_code(grpc.StatusCode.NOT_FOUND)
+            context.set_details('Video not found!')
+            return
+        with open(video_file) as file_object:
+            while True:
+                data = file_object.read(chunk_size)
+                if not data:
+                    break
+                yield data
 
     def DeleteVideo(self, request, context):
-    """Delete a result video.
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
+        dir = get_results_dir(request.env_id)
+        video_file = ""
+        for (root, _, filenames) in os.walk(dir):
+            for f in filenames:
+                filesuffix = "video" + str(request.episode_id).zfill(6) + ".mp4"
+                if filesuffix in f:
+                    video_file = os.path.join(root, f)
+                    os.remove(video_file)
 
     def DeleteEnv(self, request, context):
-    """Delete an environment.
-    """
-    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
-    context.set_details('Method not implemented!')
-    raise NotImplementedError('Method not implemented!')
-
-    def Make(self, name, _):
-        name = name.value
-        if not hasattr(self, 'env') or self.env.spec.id != name:
-            self.env = gym.make(name)
-        return Info(observation_shape=self.env.observation_space.shape,
-                    num_actions=self.env.action_space.n,
-                    max_episode_steps=self.env._max_episode_steps)
-
-    def Reset(self, empty, _):
-        return encode_observation(self.env.reset())
-
-    def Step(self, action, _):
-        observation, reward, done, _ = self.env.step(action.value)
-        observation = encode_observation(observation)
-        next_episode = encode_observation(self.env.reset()) if done else None
-        return Transition(observation=observation,
-                          reward=reward,
-                          next_episode=next_episode)
+        env = self.envs[request.id]
+        env.close()
+        res_dir = get_results_dir(request.id)
+        os.rmdir(res_dir)
+        del self.envs[request.id]
 
 
-def serve(address=config.address):
+def serve(address='[::]:50051'):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
-    register(Env(), server)
+    register(EnvironmentServer(), server)
     server.add_insecure_port(address)
+    print('starting server at address ' + address)
     server.start()
     try:
         while True:
             sleep(86400)
     except KeyboardInterrupt:
         server.stop(0)
+
+if __name__ == '__main__':
+    serve()
