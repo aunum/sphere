@@ -22,7 +22,7 @@ generate:
       output: ./gen/go
     - name: grpc-gateway
       type: go
-      output: ./
+      output: ./gen/go
     - name: swagger
       flags: json_names_for_fields=true
       output: ./

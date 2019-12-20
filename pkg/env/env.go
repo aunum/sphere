@@ -10,22 +10,33 @@ import (
 	"google.golang.org/grpc"
 )
 
-// Env is a convienience environment wrapper.
-type Env struct {
-	modelName string
-	record    bool
-	ID        string
-	Client    sphere.EnvironmentAPIClient
+// Server of environments.
+type Server struct {
+	// Client to connect to the Sphere server.
+	Client sphere.EnvironmentAPIClient
 }
 
-// NewLocalEnv creates a new environment by launching a docker container and connecting to it.
-func NewLocalEnv(modelName string, record bool) (*Env, error) {
+// ServerConfig is the environment server config.
+type ServerConfig struct {
+	// Docker image of environment.
+	Image string
+	// Version of the docker image.
+	Version string
+	// Port the environment is exposed on.
+	Port string
+}
+
+// GymServerConfig is a configuration for a OpenAI Gym server environment.
+var GymServerConfig = &ServerConfig{Image: "sphereproject/gym", Version: "latest", Port: "50051/tcp"}
+
+// NewLocalServer creates a new environment server by launching a docker container and connecting to it.
+func NewLocalServer(config *ServerConfig) (*Server, error) {
 	pool, err := dockertest.NewPool("")
 	if err != nil {
 		return nil, fmt.Errorf("Could not connect to docker: %s", err)
 	}
 
-	resource, err := pool.Run("sphereproject/gym", "latest", []string{})
+	resource, err := pool.Run(config.Image, config.Version, []string{})
 	if err != nil {
 		return nil, fmt.Errorf("Could not start resource: %s", err)
 	}
@@ -35,34 +46,48 @@ func NewLocalEnv(modelName string, record bool) (*Env, error) {
 	// exponential backoff-retry, because the application in the container might not be ready to accept connections yet
 	if err := pool.Retry(func() error {
 		var err error
-		address := fmt.Sprintf("localhost:%s", resource.GetPort("50051/tcp"))
+		address := fmt.Sprintf("localhost:%s", resource.GetPort(config.Port))
 		conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBlock())
 		if err != nil {
 			return err
 		}
 		defer conn.Close()
+		fmt.Println("connected!")
 		sphereClient = sphere.NewEnvironmentAPIClient(conn)
-		_, err = sphereClient.Info(context.Background(), nil)
+		resp, err := sphereClient.Info(context.Background(), &sphere.Empty{})
+		fmt.Println(resp)
 		return err
 	}); err != nil {
 		log.Fatalf("Could not connect to docker: %s", err)
 	}
-	cresp, err := sphereClient.CreateEnv(context.Background(), &sphere.CreateEnvRequest{ModelName: modelName})
+
+	return &Server{
+		Client: sphereClient,
+	}, nil
+}
+
+// Env is a convienience environment wrapper.
+type Env struct {
+	model string
+	ID    string
+}
+
+// Make an environment.
+func (s *Server) Make(model string) (*Env, error) {
+	ctx := context.Background()
+	resp, err := s.Client.CreateEnv(ctx, &sphere.CreateEnvRequest{ModelName: model})
 	if err != nil {
 		return nil, err
 	}
-	log.Print(cresp)
-	if record {
-		rresp, err := sphereClient.StartRecordEnv(context.Background(), &sphere.StartRecordEnvRequest{})
-		if err != nil {
-			return nil, err
-		}
-		log.Print(rresp)
+	log.Printf("created env: %s \n", resp.Id)
+	rresp, err := s.Client.StartRecordEnv(ctx, &sphere.StartRecordEnvRequest{Id: resp.Id})
+	if err != nil {
+		return nil, err
 	}
+	log.Println(rresp.Message)
 	return &Env{
-		modelName: modelName,
-		record:    record,
-		Client:    sphereClient,
+		model: model,
+		ID:    resp.Id,
 	}, nil
 }
 

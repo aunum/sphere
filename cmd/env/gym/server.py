@@ -57,9 +57,10 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return InfoResponse(server_name="gym")
 
     def CreateEnv(self, request, context):
-        id = uuid.uuid4()
+        id = str(uuid.uuid4())
         self.envs[id] = gym.make(request.model_name)
-        return CreateEnvResponse(observation_shape=self.envs[id].observation_space.shape,
+        return CreateEnvResponse(id=id,
+                    observation_shape=self.envs[id].observation_space.shape,
                     num_actions=self.envs[id].action_space.n,
                     max_episode_steps=self.envs[id]._max_episode_steps)
 
@@ -103,14 +104,16 @@ class EnvironmentServer(EnvironmentAPIServicer):
             3: lambda episode_id: episode_id%10==0,
             4: lambda episode_id: episode_id%100==0,
         }
-        val = StartRecordRequest.VideoSamplingRate.Value(request.video_sampling_rate)
-        rate = switcher.get(val,"Invalid sample rate")
+        # val = StartRecordEnvRequest.VideoSamplingRate.Value(request.video_sampling_rate)
+        rate = switcher.get(request.video_sampling_rate, "Invalid sample rate")
         results_dir = get_results_dir(request.id)
         self.envs[request.id] = gym.wrappers.Monitor(env, results_dir, force=request.force, resume=request.resume, video_callable=rate, uid=request.id) 
+        return StartRecordEnvResponse(message="recording environment")
 
     def StopRecordEnv(self, request, context):
         env = self.envs[request.id]
         env.close()
+        return StopRecordEnvResponse(message="stopped recording environment")
 
     # relevent https://stackoverflow.com/questions/40195740/how-to-run-openai-gym-render-over-a-server
     def Results(self, request, context):
@@ -146,6 +149,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
                 if filesuffix in f:
                     video_file = os.path.join(root, f)
                     os.remove(video_file)
+        return DeleteVideoResponse(message="deleted video")
 
     def DeleteEnv(self, request, context):
         env = self.envs[request.id]
@@ -153,6 +157,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
         res_dir = get_results_dir(request.id)
         os.rmdir(res_dir)
         del self.envs[request.id]
+        return DeleteEnvResponse(message="deleted env")
 
 
 def serve(address='[::]:50051'):
