@@ -10,6 +10,7 @@ require (
 	github.com/containerd/continuity v0.0.0-20191214063359-1097c8bae83b // indirect
 	github.com/docker/go-connections v0.4.0 // indirect
 	github.com/docker/go-units v0.4.0 // indirect
+	github.com/ghodss/yaml v1.0.0
 	github.com/golang/protobuf v1.3.2
 	github.com/grpc-ecosystem/grpc-gateway v1.12.1
 	github.com/opencontainers/image-spec v1.0.1 // indirect

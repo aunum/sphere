@@ -564,7 +564,7 @@ func request_EnvironmentAPI_GetVideo_0(ctx context.Context, marshaler runtime.Ma
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "missing parameter %s", "episode_id")
 	}
 
-	protoReq.EpisodeId, err = runtime.String(val)
+	protoReq.EpisodeId, err = runtime.Int32(val)
 
 	if err != nil {
 		return nil, metadata, status.Errorf(codes.InvalidArgument, "type mismatch, parameter: %s, error: %v", "episode_id", err)
