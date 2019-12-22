@@ -5,6 +5,7 @@ import grpc
 import json
 import uuid
 import os
+import numpy as np
 
 import sys
 sys.path.append("../../../api/gen/python/v1alpha")
@@ -56,19 +57,26 @@ class EnvironmentServer(EnvironmentAPIServicer):
     def Info(self, request, context):
         return InfoResponse(server_name="gym")
 
+    def _get_env(self, env_id):
+        env = self.envs[id]
+        observation_space = self._get_space(env.observation_space)
+        action_space = self._get_space(env.action_space)
+        return Environment(id=env_id,
+                    model_name=env.env.spec.id,
+                    observation_space=observation_space,
+                    action_space=action_space,
+                    num_actions=self.envs[id].action_space.n,
+                    max_episode_steps=self.envs[id]._max_episode_steps)
+
     def CreateEnv(self, request, context):
         id = str(uuid.uuid4())
         self.envs[id] = gym.make(request.model_name)
-        return CreateEnvResponse(id=id,
-                    observation_shape=self.envs[id].observation_space.shape,
-                    num_actions=self.envs[id].action_space.n,
-                    max_episode_steps=self.envs[id]._max_episode_steps)
+        return CreateEnvResponse(environment=self._get_env(id))
 
     def ListEnvs(self, request, context):
         envs = []
         for id in self.envs:
-            env = self.envs[id]
-            envs.append(Environment(id=id,model_name=env.env.spec.id))
+            envs.append(self._get_env(id))
         return ListEnvsResponse(envs=envs)
 
     def ListModels(self, request, context):
@@ -78,8 +86,18 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return ListModelsResponse(models=resp)
 
     def GetEnv(self, request, context):
-        env = self.envs[request.id]
-        return Environment(id=id,model_name=env.env.spec.id)
+        return GetEnvResponse(environment=self._get_env(request.id))
+
+    def _get_space_info(self, space):
+        name = space.__class__.__name__
+        info = Space(name=name)
+        if name == 'Discrete':
+            info.discrete = DiscreteSpace(n=space.n)
+        elif name == 'Box':
+            info.box = BoxSpace(shape=space.shape)
+            info.box.low  = [(x if x != -np.inf else -1e100) for x in np.array(space.low ).flatten()]
+            info.box.high = [(x if x != +np.inf else +1e100) for x in np.array(space.high).flatten()]
+        return info
 
     def ResetEnv(self, request, context):
         env = self.envs[request.id]
@@ -91,9 +109,14 @@ class EnvironmentServer(EnvironmentAPIServicer):
         observation, reward, done, _ = env.step(action.value)
         observation = encode_observation(observation)
         next_episode = encode_observation(env.reset()) if done else None
-        return StepEnvResponse(transition=Transition(observation=observation,
+        return StepEnvResponse(observation=observation,
                           reward=reward,
-                          next_episode=next_episode))
+                          next_episode=next_episode,
+                          done=done)
+
+    def SampleAction(self, request, context):
+        env = self.envs[request.id]
+        return SampleActionResponse(value=env.action_space.sample())
 
     def StartRecordEnv(self, request, context):
         env = self.envs[request.id]

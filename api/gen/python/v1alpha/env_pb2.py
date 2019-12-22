@@ -22,7 +22,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   package='sphere.api.v1alpha',
   syntax='proto3',
   serialized_options=None,
-  serialized_pb=_b('\n\tenv.proto\x12\x12sphere.api.v1alpha\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"#\n\x0cInfoResponse\x12\x13\n\x0bserver_name\x18\x01 \x01(\t\"&\n\x10\x43reateEnvRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\"j\n\x11\x43reateEnvResponse\x12\n\n\x02id\x18\x01 \x01(\t\x12\x19\n\x11observation_shape\x18\x02 \x03(\x05\x12\x13\n\x0bnum_actions\x18\x03 \x01(\x05\x12\x19\n\x11max_episode_steps\x18\x04 \x01(\x05\"/\n\x0eListEnvRequest\x12\r\n\x05limit\x18\x01 \x01(\x05\x12\x0e\n\x06offset\x18\x02 \x01(\x05\"@\n\x0fListEnvResponse\x12-\n\x04\x65nvs\x18\x01 \x03(\x0b\x32\x1f.sphere.api.v1alpha.Environment\"\x1b\n\rGetEnvRequest\x12\n\n\x02id\x18\x01 \x01(\t\">\n\x0eGetEnvResponse\x12,\n\x03\x65nv\x18\x01 \x01(\x0b\x32\x1f.sphere.api.v1alpha.Environment\"2\n\x11ListModelsRequest\x12\r\n\x05limit\x18\x01 \x01(\x05\x12\x0e\n\x06offset\x18\x02 \x01(\x05\"?\n\x12ListModelsResponse\x12)\n\x06models\x18\x01 \x03(\x0b\x32\x19.sphere.api.v1alpha.Model\"\x1d\n\x0fResetEnvRequest\x12\n\n\x02id\x18\x01 \x01(\t\"H\n\x10ResetEnvResponse\x12\x34\n\x0bobservation\x18\x01 \x01(\x0b\x32\x1f.sphere.api.v1alpha.Observation\"+\n\x0eStepEnvRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05\"\x8e\x01\n\x0fStepEnvResponse\x12\x34\n\x0bobservation\x18\x01 \x01(\x0b\x32\x1f.sphere.api.v1alpha.Observation\x12\x0e\n\x06reward\x18\x02 \x01(\x02\x12\x35\n\x0cnext_episode\x18\x03 \x01(\x0b\x32\x1f.sphere.api.v1alpha.Observation\"\xe8\x01\n\x15StartRecordEnvRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05\x66orce\x18\x02 \x01(\x08\x12\x0e\n\x06resume\x18\x03 \x01(\x08\x12X\n\x13video_sampling_rate\x18\x04 \x01(\x0e\x32;.sphere.api.v1alpha.StartRecordEnvRequest.VideoSamplingRate\"J\n\x11VideoSamplingRate\x12\t\n\x05\x43UBIC\x10\x00\x12\x08\n\x04NONE\x10\x01\x12\x07\n\x03\x41LL\x10\x02\x12\t\n\x05TENTH\x10\x03\x12\x0c\n\x08HUNDRETH\x10\x04\")\n\x16StartRecordEnvResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"\"\n\x14StopRecordEnvRequest\x12\n\n\x02id\x18\x01 \x01(\t\"(\n\x15StopRecordEnvResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x1c\n\x0eResultsRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\xc8\x02\n\x0fResultsResponse\x12P\n\x0f\x65pisode_results\x18\x01 \x03(\x0b\x32\x37.sphere.api.v1alpha.ResultsResponse.EpisodeResultsEntry\x12?\n\x06videos\x18\x02 \x03(\x0b\x32/.sphere.api.v1alpha.ResultsResponse.VideosEntry\x1aX\n\x13\x45pisodeResultsEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\x30\n\x05value\x18\x02 \x01(\x0b\x32!.sphere.api.v1alpha.EpisodeResult:\x02\x38\x01\x1aH\n\x0bVideosEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12(\n\x05value\x18\x02 \x01(\x0b\x32\x19.sphere.api.v1alpha.Video:\x02\x38\x01\"1\n\x0fGetVideoRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nepisode_id\x18\x02 \x01(\x05\"!\n\x10GetVideoResponse\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"4\n\x12\x44\x65leteVideoRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nepisode_id\x18\x02 \x01(\t\"&\n\x13\x44\x65leteVideoResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x1e\n\x10\x44\x65leteEnvRequest\x12\n\n\x02id\x18\x01 \x01(\t\"$\n\x11\x44\x65leteEnvResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"*\n\x0bObservation\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x02\x12\r\n\x05shape\x18\x02 \x03(\x05\"-\n\x0b\x45nvironment\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\"*\n\x05Model\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\"z\n\rEpisodeResult\x12\x12\n\nepisode_id\x18\x01 \x01(\x05\x12-\n\ttimestamp\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x16\n\x0e\x65pisode_length\x18\x03 \x01(\x05\x12\x0e\n\x06reward\x18\x04 \x01(\x02\"1\n\x05Video\x12\x12\n\nepisode_id\x18\x01 \x01(\x05\x12\x14\n\x0c\x63ontent_type\x18\x02 \x01(\t\"\x07\n\x05\x45mpty2\xd2\x0c\n\x0e\x45nvironmentAPI\x12Z\n\x04Info\x12\x19.sphere.api.v1alpha.Empty\x1a .sphere.api.v1alpha.InfoResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/v1alpha/info\x12r\n\tCreateEnv\x12$.sphere.api.v1alpha.CreateEnvRequest\x1a%.sphere.api.v1alpha.CreateEnvResponse\"\x18\x82\xd3\xe4\x93\x02\x12\"\r/v1alpha/envs:\x01*\x12j\n\x08ListEnvs\x12\".sphere.api.v1alpha.ListEnvRequest\x1a#.sphere.api.v1alpha.ListEnvResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/v1alpha/envs\x12t\n\nListModels\x12%.sphere.api.v1alpha.ListModelsRequest\x1a&.sphere.api.v1alpha.ListModelsResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/v1alpha/models\x12k\n\x06GetEnv\x12!.sphere.api.v1alpha.GetEnvRequest\x1a\".sphere.api.v1alpha.GetEnvResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/v1alpha/envs/{id}\x12z\n\x08ResetEnv\x12#.sphere.api.v1alpha.ResetEnvRequest\x1a$.sphere.api.v1alpha.ResetEnvResponse\"#\x82\xd3\xe4\x93\x02\x1d\x1a\x18/v1alpha/envs/{id}/reset:\x01*\x12v\n\x07StepEnv\x12\".sphere.api.v1alpha.StepEnvRequest\x1a#.sphere.api.v1alpha.StepEnvResponse\"\"\x82\xd3\xe4\x93\x02\x1c\"\x17/v1alpha/envs/{id}/step:\x01*\x12\x93\x01\n\x0eStartRecordEnv\x12).sphere.api.v1alpha.StartRecordEnvRequest\x1a*.sphere.api.v1alpha.StartRecordEnvResponse\"*\x82\xd3\xe4\x93\x02$\"\x1f/v1alpha/envs/{id}/record/start:\x01*\x12\x8f\x01\n\rStopRecordEnv\x12(.sphere.api.v1alpha.StopRecordEnvRequest\x1a).sphere.api.v1alpha.StopRecordEnvResponse\")\x82\xd3\xe4\x93\x02#\"\x1e/v1alpha/envs/{id}/record/stop:\x01*\x12v\n\x07Results\x12\".sphere.api.v1alpha.ResultsRequest\x1a#.sphere.api.v1alpha.ResultsResponse\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/v1alpha/envs/{id}/results\x12\x86\x01\n\x08GetVideo\x12#.sphere.api.v1alpha.GetVideoRequest\x1a$.sphere.api.v1alpha.GetVideoResponse\"-\x82\xd3\xe4\x93\x02\'\x12%/v1alpha/envs/{id}/video/{episode_id}0\x01\x12\x8d\x01\n\x0b\x44\x65leteVideo\x12&.sphere.api.v1alpha.DeleteVideoRequest\x1a\'.sphere.api.v1alpha.DeleteVideoResponse\"-\x82\xd3\xe4\x93\x02\'*%/v1alpha/envs/{id}/video/{episode_id}\x12t\n\tDeleteEnv\x12$.sphere.api.v1alpha.DeleteEnvRequest\x1a%.sphere.api.v1alpha.DeleteEnvResponse\"\x1a\x82\xd3\xe4\x93\x02\x14*\x12/v1alpha/envs/{id}b\x06proto3')
+  serialized_pb=_b('\n\tenv.proto\x12\x12sphere.api.v1alpha\x1a\x1cgoogle/api/annotations.proto\x1a\x1fgoogle/protobuf/timestamp.proto\"#\n\x0cInfoResponse\x12\x13\n\x0bserver_name\x18\x01 \x01(\t\"&\n\x10\x43reateEnvRequest\x12\x12\n\nmodel_name\x18\x01 \x01(\t\"I\n\x11\x43reateEnvResponse\x12\x34\n\x0b\x65nvironment\x18\x01 \x01(\x0b\x32\x1f.sphere.api.v1alpha.Environment\"/\n\x0eListEnvRequest\x12\r\n\x05limit\x18\x01 \x01(\x05\x12\x0e\n\x06offset\x18\x02 \x01(\x05\"@\n\x0fListEnvResponse\x12-\n\x04\x65nvs\x18\x01 \x03(\x0b\x32\x1f.sphere.api.v1alpha.Environment\"\x1b\n\rGetEnvRequest\x12\n\n\x02id\x18\x01 \x01(\t\">\n\x0eGetEnvResponse\x12,\n\x03\x65nv\x18\x01 \x01(\x0b\x32\x1f.sphere.api.v1alpha.Environment\"2\n\x11ListModelsRequest\x12\r\n\x05limit\x18\x01 \x01(\x05\x12\x0e\n\x06offset\x18\x02 \x01(\x05\"?\n\x12ListModelsResponse\x12)\n\x06models\x18\x01 \x03(\x0b\x32\x19.sphere.api.v1alpha.Model\"\x1d\n\x0fResetEnvRequest\x12\n\n\x02id\x18\x01 \x01(\t\"H\n\x10ResetEnvResponse\x12\x34\n\x0bobservation\x18\x01 \x01(\x0b\x32\x1f.sphere.api.v1alpha.Observation\"+\n\x0eStepEnvRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\x05\"\x9c\x01\n\x0fStepEnvResponse\x12\x34\n\x0bobservation\x18\x01 \x01(\x0b\x32\x1f.sphere.api.v1alpha.Observation\x12\x0e\n\x06reward\x18\x02 \x01(\x02\x12\x35\n\x0cnext_episode\x18\x03 \x01(\x0b\x32\x1f.sphere.api.v1alpha.Observation\x12\x0c\n\x04\x64one\x18\x04 \x01(\x08\"!\n\x13SampleActionRequest\x12\n\n\x02id\x18\x01 \x01(\t\"%\n\x14SampleActionResponse\x12\r\n\x05value\x18\x01 \x01(\x05\"\xe8\x01\n\x15StartRecordEnvRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\r\n\x05\x66orce\x18\x02 \x01(\x08\x12\x0e\n\x06resume\x18\x03 \x01(\x08\x12X\n\x13video_sampling_rate\x18\x04 \x01(\x0e\x32;.sphere.api.v1alpha.StartRecordEnvRequest.VideoSamplingRate\"J\n\x11VideoSamplingRate\x12\t\n\x05\x43UBIC\x10\x00\x12\x08\n\x04NONE\x10\x01\x12\x07\n\x03\x41LL\x10\x02\x12\t\n\x05TENTH\x10\x03\x12\x0c\n\x08HUNDRETH\x10\x04\")\n\x16StartRecordEnvResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"\"\n\x14StopRecordEnvRequest\x12\n\n\x02id\x18\x01 \x01(\t\"(\n\x15StopRecordEnvResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x1c\n\x0eResultsRequest\x12\n\n\x02id\x18\x01 \x01(\t\"\xc8\x02\n\x0fResultsResponse\x12P\n\x0f\x65pisode_results\x18\x01 \x03(\x0b\x32\x37.sphere.api.v1alpha.ResultsResponse.EpisodeResultsEntry\x12?\n\x06videos\x18\x02 \x03(\x0b\x32/.sphere.api.v1alpha.ResultsResponse.VideosEntry\x1aX\n\x13\x45pisodeResultsEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12\x30\n\x05value\x18\x02 \x01(\x0b\x32!.sphere.api.v1alpha.EpisodeResult:\x02\x38\x01\x1aH\n\x0bVideosEntry\x12\x0b\n\x03key\x18\x01 \x01(\x05\x12(\n\x05value\x18\x02 \x01(\x0b\x32\x19.sphere.api.v1alpha.Video:\x02\x38\x01\"1\n\x0fGetVideoRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nepisode_id\x18\x02 \x01(\x05\"!\n\x10GetVideoResponse\x12\r\n\x05\x63hunk\x18\x01 \x01(\x0c\"4\n\x12\x44\x65leteVideoRequest\x12\n\n\x02id\x18\x01 \x01(\t\x12\x12\n\nepisode_id\x18\x02 \x01(\t\"&\n\x13\x44\x65leteVideoResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x1e\n\x10\x44\x65leteEnvRequest\x12\n\n\x02id\x18\x01 \x01(\t\"$\n\x11\x44\x65leteEnvResponse\x12\x0f\n\x07message\x18\x01 \x01(\t\"*\n\x0bObservation\x12\x0c\n\x04\x64\x61ta\x18\x01 \x03(\x02\x12\r\n\x05shape\x18\x02 \x03(\x05\"\xc4\x01\n\x0b\x45nvironment\x12\x12\n\nmodel_name\x18\x01 \x01(\t\x12\n\n\x02id\x18\x02 \x01(\t\x12/\n\x0c\x61\x63tion_space\x18\x03 \x01(\x0b\x32\x19.sphere.api.v1alpha.Space\x12\x34\n\x11observation_space\x18\x04 \x01(\x0b\x32\x19.sphere.api.v1alpha.Space\x12\x13\n\x0bnum_actions\x18\x05 \x01(\x05\x12\x19\n\x11max_episode_steps\x18\x06 \x01(\x05\"\xfc\x01\n\x05Space\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x35\n\x08\x64iscrete\x18\x02 \x01(\x0b\x32!.sphere.api.v1alpha.DiscreteSpaceH\x00\x12+\n\x03\x62ox\x18\x03 \x01(\x0b\x32\x1c.sphere.api.v1alpha.BoxSpaceH\x00\x12@\n\x0emulti_discrete\x18\x04 \x01(\x0b\x32&.sphere.api.v1alpha.MultiDiscreteSpaceH\x00\x12\x37\n\x0cstruct_space\x18\x05 \x01(\x0b\x32\x1f.sphere.api.v1alpha.StructSpaceH\x00\x42\x06\n\x04info\"\x94\x01\n\x0bStructSpace\x12;\n\x06struct\x18\x01 \x03(\x0b\x32+.sphere.api.v1alpha.StructSpace.StructEntry\x1aH\n\x0bStructEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12(\n\x05value\x18\x02 \x01(\x0b\x32\x19.sphere.api.v1alpha.Space:\x02\x38\x01\"\x1a\n\rDiscreteSpace\x12\t\n\x01n\x18\x01 \x01(\x03\"4\n\x08\x42oxSpace\x12\r\n\x05shape\x18\x01 \x03(\x03\x12\x0b\n\x03low\x18\x02 \x03(\x03\x12\x0c\n\x04high\x18\x03 \x03(\x03\"-\n\x12MultiDiscreteSpace\x12\x17\n\x0f\x64iscrete_spaces\x18\x01 \x03(\x05\"*\n\x05Model\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x13\n\x0b\x64\x65scription\x18\x02 \x01(\t\"z\n\rEpisodeResult\x12\x12\n\nepisode_id\x18\x01 \x01(\x05\x12-\n\ttimestamp\x18\x02 \x01(\x0b\x32\x1a.google.protobuf.Timestamp\x12\x16\n\x0e\x65pisode_length\x18\x03 \x01(\x05\x12\x0e\n\x06reward\x18\x04 \x01(\x02\"1\n\x05Video\x12\x12\n\nepisode_id\x18\x01 \x01(\x05\x12\x14\n\x0c\x63ontent_type\x18\x02 \x01(\t\"\x07\n\x05\x45mpty2\xe0\r\n\x0e\x45nvironmentAPI\x12Z\n\x04Info\x12\x19.sphere.api.v1alpha.Empty\x1a .sphere.api.v1alpha.InfoResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/v1alpha/info\x12r\n\tCreateEnv\x12$.sphere.api.v1alpha.CreateEnvRequest\x1a%.sphere.api.v1alpha.CreateEnvResponse\"\x18\x82\xd3\xe4\x93\x02\x12\"\r/v1alpha/envs:\x01*\x12j\n\x08ListEnvs\x12\".sphere.api.v1alpha.ListEnvRequest\x1a#.sphere.api.v1alpha.ListEnvResponse\"\x15\x82\xd3\xe4\x93\x02\x0f\x12\r/v1alpha/envs\x12t\n\nListModels\x12%.sphere.api.v1alpha.ListModelsRequest\x1a&.sphere.api.v1alpha.ListModelsResponse\"\x17\x82\xd3\xe4\x93\x02\x11\x12\x0f/v1alpha/models\x12k\n\x06GetEnv\x12!.sphere.api.v1alpha.GetEnvRequest\x1a\".sphere.api.v1alpha.GetEnvResponse\"\x1a\x82\xd3\xe4\x93\x02\x14\x12\x12/v1alpha/envs/{id}\x12z\n\x08ResetEnv\x12#.sphere.api.v1alpha.ResetEnvRequest\x1a$.sphere.api.v1alpha.ResetEnvResponse\"#\x82\xd3\xe4\x93\x02\x1d\x1a\x18/v1alpha/envs/{id}/reset:\x01*\x12v\n\x07StepEnv\x12\".sphere.api.v1alpha.StepEnvRequest\x1a#.sphere.api.v1alpha.StepEnvResponse\"\"\x82\xd3\xe4\x93\x02\x1c\"\x17/v1alpha/envs/{id}/step:\x01*\x12\x8b\x01\n\x0cSampleAction\x12\'.sphere.api.v1alpha.SampleActionRequest\x1a(.sphere.api.v1alpha.SampleActionResponse\"(\x82\xd3\xe4\x93\x02\"\x12 /v1alpha/envs/{id}/sample_action\x12\x93\x01\n\x0eStartRecordEnv\x12).sphere.api.v1alpha.StartRecordEnvRequest\x1a*.sphere.api.v1alpha.StartRecordEnvResponse\"*\x82\xd3\xe4\x93\x02$\"\x1f/v1alpha/envs/{id}/record/start:\x01*\x12\x8f\x01\n\rStopRecordEnv\x12(.sphere.api.v1alpha.StopRecordEnvRequest\x1a).sphere.api.v1alpha.StopRecordEnvResponse\")\x82\xd3\xe4\x93\x02#\"\x1e/v1alpha/envs/{id}/record/stop:\x01*\x12v\n\x07Results\x12\".sphere.api.v1alpha.ResultsRequest\x1a#.sphere.api.v1alpha.ResultsResponse\"\"\x82\xd3\xe4\x93\x02\x1c\x12\x1a/v1alpha/envs/{id}/results\x12\x86\x01\n\x08GetVideo\x12#.sphere.api.v1alpha.GetVideoRequest\x1a$.sphere.api.v1alpha.GetVideoResponse\"-\x82\xd3\xe4\x93\x02\'\x12%/v1alpha/envs/{id}/video/{episode_id}0\x01\x12\x8d\x01\n\x0b\x44\x65leteVideo\x12&.sphere.api.v1alpha.DeleteVideoRequest\x1a\'.sphere.api.v1alpha.DeleteVideoResponse\"-\x82\xd3\xe4\x93\x02\'*%/v1alpha/envs/{id}/video/{episode_id}\x12t\n\tDeleteEnv\x12$.sphere.api.v1alpha.DeleteEnvRequest\x1a%.sphere.api.v1alpha.DeleteEnvResponse\"\x1a\x82\xd3\xe4\x93\x02\x14*\x12/v1alpha/envs/{id}b\x06proto3')
   ,
   dependencies=[google_dot_api_dot_annotations__pb2.DESCRIPTOR,google_dot_protobuf_dot_timestamp__pb2.DESCRIPTOR,])
 
@@ -57,8 +57,8 @@ _STARTRECORDENVREQUEST_VIDEOSAMPLINGRATE = _descriptor.EnumDescriptor(
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=1060,
-  serialized_end=1134,
+  serialized_start=1115,
+  serialized_end=1189,
 )
 _sym_db.RegisterEnumDescriptor(_STARTRECORDENVREQUEST_VIDEOSAMPLINGRATE)
 
@@ -133,30 +133,9 @@ _CREATEENVRESPONSE = _descriptor.Descriptor(
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='id', full_name='sphere.api.v1alpha.CreateEnvResponse.id', index=0,
-      number=1, type=9, cpp_type=9, label=1,
-      has_default_value=False, default_value=_b("").decode('utf-8'),
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='observation_shape', full_name='sphere.api.v1alpha.CreateEnvResponse.observation_shape', index=1,
-      number=2, type=5, cpp_type=1, label=3,
-      has_default_value=False, default_value=[],
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='num_actions', full_name='sphere.api.v1alpha.CreateEnvResponse.num_actions', index=2,
-      number=3, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
-      message_type=None, enum_type=None, containing_type=None,
-      is_extension=False, extension_scope=None,
-      serialized_options=None, file=DESCRIPTOR),
-    _descriptor.FieldDescriptor(
-      name='max_episode_steps', full_name='sphere.api.v1alpha.CreateEnvResponse.max_episode_steps', index=3,
-      number=4, type=5, cpp_type=1, label=1,
-      has_default_value=False, default_value=0,
+      name='environment', full_name='sphere.api.v1alpha.CreateEnvResponse.environment', index=0,
+      number=1, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
@@ -173,7 +152,7 @@ _CREATEENVRESPONSE = _descriptor.Descriptor(
   oneofs=[
   ],
   serialized_start=173,
-  serialized_end=279,
+  serialized_end=246,
 )
 
 
@@ -210,8 +189,8 @@ _LISTENVREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=281,
-  serialized_end=328,
+  serialized_start=248,
+  serialized_end=295,
 )
 
 
@@ -241,8 +220,8 @@ _LISTENVRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=330,
-  serialized_end=394,
+  serialized_start=297,
+  serialized_end=361,
 )
 
 
@@ -272,8 +251,8 @@ _GETENVREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=396,
-  serialized_end=423,
+  serialized_start=363,
+  serialized_end=390,
 )
 
 
@@ -303,8 +282,8 @@ _GETENVRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=425,
-  serialized_end=487,
+  serialized_start=392,
+  serialized_end=454,
 )
 
 
@@ -341,8 +320,8 @@ _LISTMODELSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=489,
-  serialized_end=539,
+  serialized_start=456,
+  serialized_end=506,
 )
 
 
@@ -372,8 +351,8 @@ _LISTMODELSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=541,
-  serialized_end=604,
+  serialized_start=508,
+  serialized_end=571,
 )
 
 
@@ -403,8 +382,8 @@ _RESETENVREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=606,
-  serialized_end=635,
+  serialized_start=573,
+  serialized_end=602,
 )
 
 
@@ -434,8 +413,8 @@ _RESETENVRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=637,
-  serialized_end=709,
+  serialized_start=604,
+  serialized_end=676,
 )
 
 
@@ -472,8 +451,8 @@ _STEPENVREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=711,
-  serialized_end=754,
+  serialized_start=678,
+  serialized_end=721,
 )
 
 
@@ -505,6 +484,13 @@ _STEPENVRESPONSE = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='done', full_name='sphere.api.v1alpha.StepEnvResponse.done', index=3,
+      number=4, type=8, cpp_type=7, label=1,
+      has_default_value=False, default_value=False,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -517,8 +503,70 @@ _STEPENVRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=757,
-  serialized_end=899,
+  serialized_start=724,
+  serialized_end=880,
+)
+
+
+_SAMPLEACTIONREQUEST = _descriptor.Descriptor(
+  name='SampleActionRequest',
+  full_name='sphere.api.v1alpha.SampleActionRequest',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='id', full_name='sphere.api.v1alpha.SampleActionRequest.id', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=882,
+  serialized_end=915,
+)
+
+
+_SAMPLEACTIONRESPONSE = _descriptor.Descriptor(
+  name='SampleActionResponse',
+  full_name='sphere.api.v1alpha.SampleActionResponse',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='value', full_name='sphere.api.v1alpha.SampleActionResponse.value', index=0,
+      number=1, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=917,
+  serialized_end=954,
 )
 
 
@@ -570,8 +618,8 @@ _STARTRECORDENVREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=902,
-  serialized_end=1134,
+  serialized_start=957,
+  serialized_end=1189,
 )
 
 
@@ -601,8 +649,8 @@ _STARTRECORDENVRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1136,
-  serialized_end=1177,
+  serialized_start=1191,
+  serialized_end=1232,
 )
 
 
@@ -632,8 +680,8 @@ _STOPRECORDENVREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1179,
-  serialized_end=1213,
+  serialized_start=1234,
+  serialized_end=1268,
 )
 
 
@@ -663,8 +711,8 @@ _STOPRECORDENVRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1215,
-  serialized_end=1255,
+  serialized_start=1270,
+  serialized_end=1310,
 )
 
 
@@ -694,8 +742,8 @@ _RESULTSREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1257,
-  serialized_end=1285,
+  serialized_start=1312,
+  serialized_end=1340,
 )
 
 
@@ -732,8 +780,8 @@ _RESULTSRESPONSE_EPISODERESULTSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1454,
-  serialized_end=1542,
+  serialized_start=1509,
+  serialized_end=1597,
 )
 
 _RESULTSRESPONSE_VIDEOSENTRY = _descriptor.Descriptor(
@@ -769,8 +817,8 @@ _RESULTSRESPONSE_VIDEOSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1544,
-  serialized_end=1616,
+  serialized_start=1599,
+  serialized_end=1671,
 )
 
 _RESULTSRESPONSE = _descriptor.Descriptor(
@@ -806,8 +854,8 @@ _RESULTSRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1288,
-  serialized_end=1616,
+  serialized_start=1343,
+  serialized_end=1671,
 )
 
 
@@ -844,8 +892,8 @@ _GETVIDEOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1618,
-  serialized_end=1667,
+  serialized_start=1673,
+  serialized_end=1722,
 )
 
 
@@ -875,8 +923,8 @@ _GETVIDEORESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1669,
-  serialized_end=1702,
+  serialized_start=1724,
+  serialized_end=1757,
 )
 
 
@@ -913,8 +961,8 @@ _DELETEVIDEOREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1704,
-  serialized_end=1756,
+  serialized_start=1759,
+  serialized_end=1811,
 )
 
 
@@ -944,8 +992,8 @@ _DELETEVIDEORESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1758,
-  serialized_end=1796,
+  serialized_start=1813,
+  serialized_end=1851,
 )
 
 
@@ -975,8 +1023,8 @@ _DELETEENVREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1798,
-  serialized_end=1828,
+  serialized_start=1853,
+  serialized_end=1883,
 )
 
 
@@ -1006,8 +1054,8 @@ _DELETEENVRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1830,
-  serialized_end=1866,
+  serialized_start=1885,
+  serialized_end=1921,
 )
 
 
@@ -1044,8 +1092,8 @@ _OBSERVATION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1868,
-  serialized_end=1910,
+  serialized_start=1923,
+  serialized_end=1965,
 )
 
 
@@ -1070,6 +1118,34 @@ _ENVIRONMENT = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='action_space', full_name='sphere.api.v1alpha.Environment.action_space', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='observation_space', full_name='sphere.api.v1alpha.Environment.observation_space', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='num_actions', full_name='sphere.api.v1alpha.Environment.num_actions', index=4,
+      number=5, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='max_episode_steps', full_name='sphere.api.v1alpha.Environment.max_episode_steps', index=5,
+      number=6, type=5, cpp_type=1, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
@@ -1082,8 +1158,245 @@ _ENVIRONMENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1912,
-  serialized_end=1957,
+  serialized_start=1968,
+  serialized_end=2164,
+)
+
+
+_SPACE = _descriptor.Descriptor(
+  name='Space',
+  full_name='sphere.api.v1alpha.Space',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='name', full_name='sphere.api.v1alpha.Space.name', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='discrete', full_name='sphere.api.v1alpha.Space.discrete', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='box', full_name='sphere.api.v1alpha.Space.box', index=2,
+      number=3, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='multi_discrete', full_name='sphere.api.v1alpha.Space.multi_discrete', index=3,
+      number=4, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='struct_space', full_name='sphere.api.v1alpha.Space.struct_space', index=4,
+      number=5, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+    _descriptor.OneofDescriptor(
+      name='info', full_name='sphere.api.v1alpha.Space.info',
+      index=0, containing_type=None, fields=[]),
+  ],
+  serialized_start=2167,
+  serialized_end=2419,
+)
+
+
+_STRUCTSPACE_STRUCTENTRY = _descriptor.Descriptor(
+  name='StructEntry',
+  full_name='sphere.api.v1alpha.StructSpace.StructEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='sphere.api.v1alpha.StructSpace.StructEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='sphere.api.v1alpha.StructSpace.StructEntry.value', index=1,
+      number=2, type=11, cpp_type=10, label=1,
+      has_default_value=False, default_value=None,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=_b('8\001'),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2498,
+  serialized_end=2570,
+)
+
+_STRUCTSPACE = _descriptor.Descriptor(
+  name='StructSpace',
+  full_name='sphere.api.v1alpha.StructSpace',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='struct', full_name='sphere.api.v1alpha.StructSpace.struct', index=0,
+      number=1, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[_STRUCTSPACE_STRUCTENTRY, ],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2422,
+  serialized_end=2570,
+)
+
+
+_DISCRETESPACE = _descriptor.Descriptor(
+  name='DiscreteSpace',
+  full_name='sphere.api.v1alpha.DiscreteSpace',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='n', full_name='sphere.api.v1alpha.DiscreteSpace.n', index=0,
+      number=1, type=3, cpp_type=2, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2572,
+  serialized_end=2598,
+)
+
+
+_BOXSPACE = _descriptor.Descriptor(
+  name='BoxSpace',
+  full_name='sphere.api.v1alpha.BoxSpace',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='shape', full_name='sphere.api.v1alpha.BoxSpace.shape', index=0,
+      number=1, type=3, cpp_type=2, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='low', full_name='sphere.api.v1alpha.BoxSpace.low', index=1,
+      number=2, type=3, cpp_type=2, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='high', full_name='sphere.api.v1alpha.BoxSpace.high', index=2,
+      number=3, type=3, cpp_type=2, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2600,
+  serialized_end=2652,
+)
+
+
+_MULTIDISCRETESPACE = _descriptor.Descriptor(
+  name='MultiDiscreteSpace',
+  full_name='sphere.api.v1alpha.MultiDiscreteSpace',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='discrete_spaces', full_name='sphere.api.v1alpha.MultiDiscreteSpace.discrete_spaces', index=0,
+      number=1, type=5, cpp_type=1, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  serialized_options=None,
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=2654,
+  serialized_end=2699,
 )
 
 
@@ -1120,8 +1433,8 @@ _MODEL = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1959,
-  serialized_end=2001,
+  serialized_start=2701,
+  serialized_end=2743,
 )
 
 
@@ -1172,8 +1485,8 @@ _EPISODERESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2003,
-  serialized_end=2125,
+  serialized_start=2745,
+  serialized_end=2867,
 )
 
 
@@ -1210,8 +1523,8 @@ _VIDEO = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2127,
-  serialized_end=2176,
+  serialized_start=2869,
+  serialized_end=2918,
 )
 
 
@@ -1234,10 +1547,11 @@ _EMPTY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=2178,
-  serialized_end=2185,
+  serialized_start=2920,
+  serialized_end=2927,
 )
 
+_CREATEENVRESPONSE.fields_by_name['environment'].message_type = _ENVIRONMENT
 _LISTENVRESPONSE.fields_by_name['envs'].message_type = _ENVIRONMENT
 _GETENVRESPONSE.fields_by_name['env'].message_type = _ENVIRONMENT
 _LISTMODELSRESPONSE.fields_by_name['models'].message_type = _MODEL
@@ -1252,6 +1566,27 @@ _RESULTSRESPONSE_VIDEOSENTRY.fields_by_name['value'].message_type = _VIDEO
 _RESULTSRESPONSE_VIDEOSENTRY.containing_type = _RESULTSRESPONSE
 _RESULTSRESPONSE.fields_by_name['episode_results'].message_type = _RESULTSRESPONSE_EPISODERESULTSENTRY
 _RESULTSRESPONSE.fields_by_name['videos'].message_type = _RESULTSRESPONSE_VIDEOSENTRY
+_ENVIRONMENT.fields_by_name['action_space'].message_type = _SPACE
+_ENVIRONMENT.fields_by_name['observation_space'].message_type = _SPACE
+_SPACE.fields_by_name['discrete'].message_type = _DISCRETESPACE
+_SPACE.fields_by_name['box'].message_type = _BOXSPACE
+_SPACE.fields_by_name['multi_discrete'].message_type = _MULTIDISCRETESPACE
+_SPACE.fields_by_name['struct_space'].message_type = _STRUCTSPACE
+_SPACE.oneofs_by_name['info'].fields.append(
+  _SPACE.fields_by_name['discrete'])
+_SPACE.fields_by_name['discrete'].containing_oneof = _SPACE.oneofs_by_name['info']
+_SPACE.oneofs_by_name['info'].fields.append(
+  _SPACE.fields_by_name['box'])
+_SPACE.fields_by_name['box'].containing_oneof = _SPACE.oneofs_by_name['info']
+_SPACE.oneofs_by_name['info'].fields.append(
+  _SPACE.fields_by_name['multi_discrete'])
+_SPACE.fields_by_name['multi_discrete'].containing_oneof = _SPACE.oneofs_by_name['info']
+_SPACE.oneofs_by_name['info'].fields.append(
+  _SPACE.fields_by_name['struct_space'])
+_SPACE.fields_by_name['struct_space'].containing_oneof = _SPACE.oneofs_by_name['info']
+_STRUCTSPACE_STRUCTENTRY.fields_by_name['value'].message_type = _SPACE
+_STRUCTSPACE_STRUCTENTRY.containing_type = _STRUCTSPACE
+_STRUCTSPACE.fields_by_name['struct'].message_type = _STRUCTSPACE_STRUCTENTRY
 _EPISODERESULT.fields_by_name['timestamp'].message_type = google_dot_protobuf_dot_timestamp__pb2._TIMESTAMP
 DESCRIPTOR.message_types_by_name['InfoResponse'] = _INFORESPONSE
 DESCRIPTOR.message_types_by_name['CreateEnvRequest'] = _CREATEENVREQUEST
@@ -1266,6 +1601,8 @@ DESCRIPTOR.message_types_by_name['ResetEnvRequest'] = _RESETENVREQUEST
 DESCRIPTOR.message_types_by_name['ResetEnvResponse'] = _RESETENVRESPONSE
 DESCRIPTOR.message_types_by_name['StepEnvRequest'] = _STEPENVREQUEST
 DESCRIPTOR.message_types_by_name['StepEnvResponse'] = _STEPENVRESPONSE
+DESCRIPTOR.message_types_by_name['SampleActionRequest'] = _SAMPLEACTIONREQUEST
+DESCRIPTOR.message_types_by_name['SampleActionResponse'] = _SAMPLEACTIONRESPONSE
 DESCRIPTOR.message_types_by_name['StartRecordEnvRequest'] = _STARTRECORDENVREQUEST
 DESCRIPTOR.message_types_by_name['StartRecordEnvResponse'] = _STARTRECORDENVRESPONSE
 DESCRIPTOR.message_types_by_name['StopRecordEnvRequest'] = _STOPRECORDENVREQUEST
@@ -1280,6 +1617,11 @@ DESCRIPTOR.message_types_by_name['DeleteEnvRequest'] = _DELETEENVREQUEST
 DESCRIPTOR.message_types_by_name['DeleteEnvResponse'] = _DELETEENVRESPONSE
 DESCRIPTOR.message_types_by_name['Observation'] = _OBSERVATION
 DESCRIPTOR.message_types_by_name['Environment'] = _ENVIRONMENT
+DESCRIPTOR.message_types_by_name['Space'] = _SPACE
+DESCRIPTOR.message_types_by_name['StructSpace'] = _STRUCTSPACE
+DESCRIPTOR.message_types_by_name['DiscreteSpace'] = _DISCRETESPACE
+DESCRIPTOR.message_types_by_name['BoxSpace'] = _BOXSPACE
+DESCRIPTOR.message_types_by_name['MultiDiscreteSpace'] = _MULTIDISCRETESPACE
 DESCRIPTOR.message_types_by_name['Model'] = _MODEL
 DESCRIPTOR.message_types_by_name['EpisodeResult'] = _EPISODERESULT
 DESCRIPTOR.message_types_by_name['Video'] = _VIDEO
@@ -1376,6 +1718,20 @@ StepEnvResponse = _reflection.GeneratedProtocolMessageType('StepEnvResponse', (_
   # @@protoc_insertion_point(class_scope:sphere.api.v1alpha.StepEnvResponse)
   })
 _sym_db.RegisterMessage(StepEnvResponse)
+
+SampleActionRequest = _reflection.GeneratedProtocolMessageType('SampleActionRequest', (_message.Message,), {
+  'DESCRIPTOR' : _SAMPLEACTIONREQUEST,
+  '__module__' : 'env_pb2'
+  # @@protoc_insertion_point(class_scope:sphere.api.v1alpha.SampleActionRequest)
+  })
+_sym_db.RegisterMessage(SampleActionRequest)
+
+SampleActionResponse = _reflection.GeneratedProtocolMessageType('SampleActionResponse', (_message.Message,), {
+  'DESCRIPTOR' : _SAMPLEACTIONRESPONSE,
+  '__module__' : 'env_pb2'
+  # @@protoc_insertion_point(class_scope:sphere.api.v1alpha.SampleActionResponse)
+  })
+_sym_db.RegisterMessage(SampleActionResponse)
 
 StartRecordEnvRequest = _reflection.GeneratedProtocolMessageType('StartRecordEnvRequest', (_message.Message,), {
   'DESCRIPTOR' : _STARTRECORDENVREQUEST,
@@ -1491,6 +1847,49 @@ Environment = _reflection.GeneratedProtocolMessageType('Environment', (_message.
   })
 _sym_db.RegisterMessage(Environment)
 
+Space = _reflection.GeneratedProtocolMessageType('Space', (_message.Message,), {
+  'DESCRIPTOR' : _SPACE,
+  '__module__' : 'env_pb2'
+  # @@protoc_insertion_point(class_scope:sphere.api.v1alpha.Space)
+  })
+_sym_db.RegisterMessage(Space)
+
+StructSpace = _reflection.GeneratedProtocolMessageType('StructSpace', (_message.Message,), {
+
+  'StructEntry' : _reflection.GeneratedProtocolMessageType('StructEntry', (_message.Message,), {
+    'DESCRIPTOR' : _STRUCTSPACE_STRUCTENTRY,
+    '__module__' : 'env_pb2'
+    # @@protoc_insertion_point(class_scope:sphere.api.v1alpha.StructSpace.StructEntry)
+    })
+  ,
+  'DESCRIPTOR' : _STRUCTSPACE,
+  '__module__' : 'env_pb2'
+  # @@protoc_insertion_point(class_scope:sphere.api.v1alpha.StructSpace)
+  })
+_sym_db.RegisterMessage(StructSpace)
+_sym_db.RegisterMessage(StructSpace.StructEntry)
+
+DiscreteSpace = _reflection.GeneratedProtocolMessageType('DiscreteSpace', (_message.Message,), {
+  'DESCRIPTOR' : _DISCRETESPACE,
+  '__module__' : 'env_pb2'
+  # @@protoc_insertion_point(class_scope:sphere.api.v1alpha.DiscreteSpace)
+  })
+_sym_db.RegisterMessage(DiscreteSpace)
+
+BoxSpace = _reflection.GeneratedProtocolMessageType('BoxSpace', (_message.Message,), {
+  'DESCRIPTOR' : _BOXSPACE,
+  '__module__' : 'env_pb2'
+  # @@protoc_insertion_point(class_scope:sphere.api.v1alpha.BoxSpace)
+  })
+_sym_db.RegisterMessage(BoxSpace)
+
+MultiDiscreteSpace = _reflection.GeneratedProtocolMessageType('MultiDiscreteSpace', (_message.Message,), {
+  'DESCRIPTOR' : _MULTIDISCRETESPACE,
+  '__module__' : 'env_pb2'
+  # @@protoc_insertion_point(class_scope:sphere.api.v1alpha.MultiDiscreteSpace)
+  })
+_sym_db.RegisterMessage(MultiDiscreteSpace)
+
 Model = _reflection.GeneratedProtocolMessageType('Model', (_message.Message,), {
   'DESCRIPTOR' : _MODEL,
   '__module__' : 'env_pb2'
@@ -1522,6 +1921,7 @@ _sym_db.RegisterMessage(Empty)
 
 _RESULTSRESPONSE_EPISODERESULTSENTRY._options = None
 _RESULTSRESPONSE_VIDEOSENTRY._options = None
+_STRUCTSPACE_STRUCTENTRY._options = None
 
 _ENVIRONMENTAPI = _descriptor.ServiceDescriptor(
   name='EnvironmentAPI',
@@ -1529,8 +1929,8 @@ _ENVIRONMENTAPI = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   serialized_options=None,
-  serialized_start=2188,
-  serialized_end=3806,
+  serialized_start=2930,
+  serialized_end=4690,
   methods=[
   _descriptor.MethodDescriptor(
     name='Info',
@@ -1596,9 +1996,18 @@ _ENVIRONMENTAPI = _descriptor.ServiceDescriptor(
     serialized_options=_b('\202\323\344\223\002\034\"\027/v1alpha/envs/{id}/step:\001*'),
   ),
   _descriptor.MethodDescriptor(
+    name='SampleAction',
+    full_name='sphere.api.v1alpha.EnvironmentAPI.SampleAction',
+    index=7,
+    containing_service=None,
+    input_type=_SAMPLEACTIONREQUEST,
+    output_type=_SAMPLEACTIONRESPONSE,
+    serialized_options=_b('\202\323\344\223\002\"\022 /v1alpha/envs/{id}/sample_action'),
+  ),
+  _descriptor.MethodDescriptor(
     name='StartRecordEnv',
     full_name='sphere.api.v1alpha.EnvironmentAPI.StartRecordEnv',
-    index=7,
+    index=8,
     containing_service=None,
     input_type=_STARTRECORDENVREQUEST,
     output_type=_STARTRECORDENVRESPONSE,
@@ -1607,7 +2016,7 @@ _ENVIRONMENTAPI = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='StopRecordEnv',
     full_name='sphere.api.v1alpha.EnvironmentAPI.StopRecordEnv',
-    index=8,
+    index=9,
     containing_service=None,
     input_type=_STOPRECORDENVREQUEST,
     output_type=_STOPRECORDENVRESPONSE,
@@ -1616,7 +2025,7 @@ _ENVIRONMENTAPI = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='Results',
     full_name='sphere.api.v1alpha.EnvironmentAPI.Results',
-    index=9,
+    index=10,
     containing_service=None,
     input_type=_RESULTSREQUEST,
     output_type=_RESULTSRESPONSE,
@@ -1625,7 +2034,7 @@ _ENVIRONMENTAPI = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='GetVideo',
     full_name='sphere.api.v1alpha.EnvironmentAPI.GetVideo',
-    index=10,
+    index=11,
     containing_service=None,
     input_type=_GETVIDEOREQUEST,
     output_type=_GETVIDEORESPONSE,
@@ -1634,7 +2043,7 @@ _ENVIRONMENTAPI = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='DeleteVideo',
     full_name='sphere.api.v1alpha.EnvironmentAPI.DeleteVideo',
-    index=11,
+    index=12,
     containing_service=None,
     input_type=_DELETEVIDEOREQUEST,
     output_type=_DELETEVIDEORESPONSE,
@@ -1643,7 +2052,7 @@ _ENVIRONMENTAPI = _descriptor.ServiceDescriptor(
   _descriptor.MethodDescriptor(
     name='DeleteEnv',
     full_name='sphere.api.v1alpha.EnvironmentAPI.DeleteEnv',
-    index=12,
+    index=13,
     containing_service=None,
     input_type=_DELETEENVREQUEST,
     output_type=_DELETEENVRESPONSE,

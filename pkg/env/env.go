@@ -76,10 +76,7 @@ func NewLocalServer(config *ServerConfig) (*Server, error) {
 
 // Env is a convienience environment wrapper.
 type Env struct {
-	// Model by which this environment was created.
-	Model string
-	// ID of the environment.
-	ID string
+	*sphere.Environment
 	// Client to connect to the Sphere server.
 	Client sphere.EnvironmentAPIClient
 }
@@ -91,33 +88,43 @@ func (s *Server) Make(model string) (*Env, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Printf("created env: %s \n", resp.Id)
-	rresp, err := s.Client.StartRecordEnv(ctx, &sphere.StartRecordEnvRequest{Id: resp.Id})
+	env := resp.Environment
+	fmt.Printf("created env: %s \n", env.Id)
+	rresp, err := s.Client.StartRecordEnv(ctx, &sphere.StartRecordEnvRequest{Id: env.Id})
 	if err != nil {
 		return nil, err
 	}
 	fmt.Println(rresp.Message)
 	return &Env{
-		Model:  model,
-		ID:     resp.Id,
-		Client: s.Client,
+		Environment: env,
+		Client:      s.Client,
 	}, nil
 }
 
 // Step through the environment.
 func (e *Env) Step(value int) (*sphere.StepEnvResponse, error) {
 	ctx := context.Background()
-	resp, err := e.Client.StepEnv(ctx, &sphere.StepEnvRequest{Id: e.ID, Value: int32(value)})
+	resp, err := e.Client.StepEnv(ctx, &sphere.StepEnvRequest{Id: e.Id, Value: int32(value)})
 	if err != nil {
 		return nil, err
 	}
 	return resp, nil
 }
 
+// SampleAction returns a sample action for the environment.
+func (e *Env) SampleAction() (int, error) {
+	ctx := context.Background()
+	resp, err := e.Client.SampleAction(ctx, &sphere.SampleActionRequest{Id: e.Id})
+	if err != nil {
+		return 0, err
+	}
+	return int(resp.Value), nil
+}
+
 // Reset the environment.
 func (e *Env) Reset() (*sphere.Observation, error) {
 	ctx := context.Background()
-	resp, err := e.Client.ResetEnv(ctx, &sphere.ResetEnvRequest{Id: e.ID})
+	resp, err := e.Client.ResetEnv(ctx, &sphere.ResetEnvRequest{Id: e.Id})
 	if err != nil {
 		return nil, err
 	}
@@ -127,7 +134,7 @@ func (e *Env) Reset() (*sphere.Observation, error) {
 // Close the environment.
 func (e *Env) Close() error {
 	ctx := context.Background()
-	resp, err := e.Client.DeleteEnv(ctx, &sphere.DeleteEnvRequest{Id: e.ID})
+	resp, err := e.Client.DeleteEnv(ctx, &sphere.DeleteEnvRequest{Id: e.Id})
 	if err != nil {
 		return err
 	}
@@ -138,7 +145,7 @@ func (e *Env) Close() error {
 // Results results for the environment.
 func (e *Env) Results() (*sphere.ResultsResponse, error) {
 	ctx := context.Background()
-	resp, err := e.Client.Results(ctx, &sphere.ResultsRequest{Id: e.ID})
+	resp, err := e.Client.Results(ctx, &sphere.ResultsRequest{Id: e.Id})
 	if err != nil {
 		return nil, err
 	}
@@ -169,7 +176,7 @@ func (e *Env) PrintResults() error {
 // Defaults to current directory. Returns an array of video paths.
 func (e *Env) Videos(path string) ([]string, error) {
 	if path == "" {
-		path = fmt.Sprintf("./results/%s", e.Model)
+		path = fmt.Sprintf("./results/%s", e.Id)
 	}
 	ctx := context.Background()
 	results, err := e.Results()
@@ -178,11 +185,11 @@ func (e *Env) Videos(path string) ([]string, error) {
 	}
 	videoPaths := []string{}
 	for _, video := range results.Videos {
-		stream, err := e.Client.GetVideo(ctx, &sphere.GetVideoRequest{Id: e.ID, EpisodeId: video.EpisodeId})
+		stream, err := e.Client.GetVideo(ctx, &sphere.GetVideoRequest{Id: e.Id, EpisodeId: video.EpisodeId})
 		if err != nil {
 			return nil, err
 		}
-		fp := filepath.Join(path, fmt.Sprintf("%s-episode%d.mp4", e.ID, video.EpisodeId))
+		fp := filepath.Join(path, fmt.Sprintf("%s-episode%d.mp4", e.Id, video.EpisodeId))
 		f, err := os.Create(fp)
 		if err != nil {
 			return nil, err
