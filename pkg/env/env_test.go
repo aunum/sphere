@@ -22,20 +22,22 @@ func TestLocal(t *testing.T) {
 	require.Nil(t, err)
 
 	server := Server{Client: sphereClient}
+	fmt.Println("creating env")
 	env, err := server.Make("CartPole-v0")
 	require.Nil(t, err)
 	fmt.Printf("env: %+v\n", env)
 
 	for i := 0; i <= 20; i++ {
 		fmt.Printf("episode %d \n", i)
-
 		obv, err := env.Reset()
 		fmt.Printf("observation: %+v \n", obv)
 		require.Nil(t, err)
 
-		for ts := 0; ts <= 100; ts++ {
+		for ts := 0; ts <= 20; ts++ {
+			fmt.Println("getting sample action")
 			action, err := env.SampleAction()
 			require.Nil(t, err)
+			fmt.Printf("sample action: %d \n", action)
 
 			resp, err := env.Step(action)
 			require.Nil(t, err)

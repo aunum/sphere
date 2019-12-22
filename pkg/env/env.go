@@ -90,11 +90,11 @@ func (s *Server) Make(model string) (*Env, error) {
 	}
 	env := resp.Environment
 	fmt.Printf("created env: %s \n", env.Id)
-	rresp, err := s.Client.StartRecordEnv(ctx, &sphere.StartRecordEnvRequest{Id: env.Id})
-	if err != nil {
-		return nil, err
-	}
-	fmt.Println(rresp.Message)
+	// rresp, err := s.Client.StartRecordEnv(ctx, &sphere.StartRecordEnvRequest{Id: env.Id})
+	// if err != nil {
+	// 	return nil, err
+	// }
+	// fmt.Println(rresp.Message)
 	return &Env{
 		Environment: env,
 		Client:      s.Client,

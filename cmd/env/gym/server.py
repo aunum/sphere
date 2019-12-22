@@ -58,20 +58,25 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return InfoResponse(server_name="gym")
 
     def _get_env(self, env_id):
-        env = self.envs[id]
-        observation_space = self._get_space(env.observation_space)
-        action_space = self._get_space(env.action_space)
+        env = self.envs[env_id]
+        print("getting spaces")
+        observation_space = self._get_space_info(env.observation_space)
+        action_space = self._get_space_info(env.action_space)
+        print("returning get env")
         return Environment(id=env_id,
                     model_name=env.env.spec.id,
                     observation_space=observation_space,
                     action_space=action_space,
-                    num_actions=self.envs[id].action_space.n,
-                    max_episode_steps=self.envs[id]._max_episode_steps)
+                    num_actions=self.envs[env_id].action_space.n,
+                    max_episode_steps=self.envs[env_id]._max_episode_steps)
 
     def CreateEnv(self, request, context):
+        print("creating env")
         id = str(uuid.uuid4())
         self.envs[id] = gym.make(request.model_name)
-        return CreateEnvResponse(environment=self._get_env(id))
+        env = self._get_env(id)
+        print(env)
+        return CreateEnvResponse(environment=env)
 
     def ListEnvs(self, request, context):
         envs = []
@@ -92,21 +97,28 @@ class EnvironmentServer(EnvironmentAPIServicer):
         name = space.__class__.__name__
         info = Space(name=name)
         if name == 'Discrete':
-            info.discrete = DiscreteSpace(n=space.n)
+            info.discrete.CopyFrom(DiscreteSpace(n=space.n))
         elif name == 'Box':
-            info.box = BoxSpace(shape=space.shape)
-            info.box.low  = [(x if x != -np.inf else -1e100) for x in np.array(space.low ).flatten()]
-            info.box.high = [(x if x != +np.inf else +1e100) for x in np.array(space.high).flatten()]
+            info.box.CopyFrom(BoxSpace(shape=space.shape))
+            info.box.low.extend([(x if x != -np.inf else -1e100) for x in np.array(space.low ).flatten()])
+            info.box.high.extend([(x if x != +np.inf else +1e100) for x in np.array(space.high).flatten()])
+            print(info.box)
         return info
 
     def ResetEnv(self, request, context):
+        print("resetting env")
         env = self.envs[request.id]
+        print("now")
         observation = env.reset()
-        return ResetEnvResponse(observation=Observation(data=observation.ravel(), shape=observation.shape))
+        print("reset env")
+        obv = Observation(data=observation.ravel(), shape=observation.shape)
+        print("returning")
+        return ResetEnvResponse(observation=obv)
 
     def StepEnv(self, request, context):
+        print("stepping")
         env = self.envs[request.id]
-        observation, reward, done, _ = env.step(action.value)
+        observation, reward, done, _ = env.step(request.value)
         observation = encode_observation(observation)
         next_episode = encode_observation(env.reset()) if done else None
         return StepEnvResponse(observation=observation,
@@ -115,6 +127,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
                           done=done)
 
     def SampleAction(self, request, context):
+        print("getting sample action")
         env = self.envs[request.id]
         return SampleActionResponse(value=env.action_space.sample())
 
@@ -140,11 +153,11 @@ class EnvironmentServer(EnvironmentAPIServicer):
 
     # relevent https://stackoverflow.com/questions/40195740/how-to-run-openai-gym-render-over-a-server
     def Results(self, request, context):
-        return get_results(request.env_id)
+        return get_results(request.id)
 
     def GetVideo(self, request, context):
         chunk_size=1024
-        dir = get_results_dir(request.env_id)
+        dir = get_results_dir(request.id)
         video_file = ""
         for (root, _, filenames) in os.walk(dir):
             for f in filenames:
@@ -164,7 +177,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
                 yield data
 
     def DeleteVideo(self, request, context):
-        dir = get_results_dir(request.env_id)
+        dir = get_results_dir(request.id)
         video_file = ""
         for (root, _, filenames) in os.walk(dir):
             for f in filenames:
