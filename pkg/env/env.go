@@ -1,6 +1,7 @@
 package env
 
 import (
+	"bufio"
 	"bytes"
 	"context"
 	"fmt"
@@ -14,6 +15,7 @@ import (
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/ory/dockertest"
 	sphere "github.com/pbarker/sphere/api/gen/go/v1alpha"
+	"github.com/skratchdot/open-golang/open"
 	"google.golang.org/grpc"
 )
 
@@ -59,7 +61,6 @@ func NewLocalServer(config *ServerConfig) (*Server, error) {
 		if err != nil {
 			return err
 		}
-		defer conn.Close()
 		fmt.Println("connected!")
 		sphereClient = sphere.NewEnvironmentAPIClient(conn)
 		resp, err := sphereClient.Info(context.Background(), &sphere.Empty{})
@@ -79,6 +80,8 @@ type Env struct {
 	*sphere.Environment
 	// Client to connect to the Sphere server.
 	Client sphere.EnvironmentAPIClient
+	// VideoPaths of result videos downloadloaded from the server.
+	VideoPaths []string
 }
 
 // Make an environment.
@@ -208,7 +211,6 @@ func (e *Env) Videos(path string) ([]string, error) {
 			if err != nil {
 				return nil, err
 			}
-			// fmt.Printf("chunk: %s", string(resp.Chunk))
 			_, err = f.Write(resp.Chunk)
 			if err != nil {
 				return nil, err
@@ -235,8 +237,32 @@ func (e *Env) End() {
 		log.Fatal(err)
 	}
 	fmt.Println("saved videos: ", videoPaths)
-	// err = e.Close()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// }
+	err = e.Close()
+	if err != nil {
+		log.Fatal(err)
+	}
+}
+
+// PlayAll videos stored locally.
+func (e *Env) PlayAll() {
+	for _, video := range e.VideoPaths {
+		err := open.Run(video)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	fmt.Print("press any key to remove videos or ctrl+c to exit and keep")
+	input := bufio.NewScanner(os.Stdin)
+	input.Scan()
+	e.Clean()
+}
+
+// Clean any results/videos saved locally.
+func (e *Env) Clean() {
+	for _, videoPath := range e.VideoPaths {
+		err := os.Remove(videoPath)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
 }

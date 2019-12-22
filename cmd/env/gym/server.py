@@ -7,9 +7,6 @@ import math
 import shutil
 import json
 import uuid
-# import imageio
-# import skvideo.io
-import codecs
 import os
 import numpy as np
 
@@ -55,8 +52,6 @@ def get_results(env_id):
                 with open(video_file) as json_file:
                     data = json.load(json_file)
                     videos[data["episode_id"]] = Video(episode_id=data["episode_id"], content_type=data["content_type"])
-    print("episodes: ")
-    print(episodes)
     return ResultsResponse(videos=videos,episode_results=episodes)
 
 class EnvironmentServer(EnvironmentAPIServicer):
@@ -69,16 +64,26 @@ class EnvironmentServer(EnvironmentAPIServicer):
 
     def _get_env(self, env_id):
         env = self.envs[env_id]
-        print("getting spaces")
         observation_space = self._get_space_info(env.observation_space)
         action_space = self._get_space_info(env.action_space)
-        print("returning get env")
         return Environment(id=env_id,
                     model_name=env.env.spec.id,
                     observation_space=observation_space,
                     action_space=action_space,
                     num_actions=self.envs[env_id].action_space.n,
                     max_episode_steps=self.envs[env_id]._max_episode_steps)
+
+    def _get_space_info(self, space):
+        name = space.__class__.__name__
+        info = Space(name=name)
+        if name == 'Discrete':
+            info.discrete.CopyFrom(DiscreteSpace(n=space.n))
+        elif name == 'Box':
+            info.box.CopyFrom(BoxSpace(shape=space.shape))
+            info.box.low.extend([(x if x != -np.inf else -1e100) for x in np.array(space.low ).flatten()])
+            info.box.high.extend([(x if x != +np.inf else +1e100) for x in np.array(space.high).flatten()])
+            print(info.box)
+        return info
 
     def CreateEnv(self, request, context):
         print("creating env")
@@ -103,26 +108,11 @@ class EnvironmentServer(EnvironmentAPIServicer):
     def GetEnv(self, request, context):
         return GetEnvResponse(environment=self._get_env(request.id))
 
-    def _get_space_info(self, space):
-        name = space.__class__.__name__
-        info = Space(name=name)
-        if name == 'Discrete':
-            info.discrete.CopyFrom(DiscreteSpace(n=space.n))
-        elif name == 'Box':
-            info.box.CopyFrom(BoxSpace(shape=space.shape))
-            info.box.low.extend([(x if x != -np.inf else -1e100) for x in np.array(space.low ).flatten()])
-            info.box.high.extend([(x if x != +np.inf else +1e100) for x in np.array(space.high).flatten()])
-            print(info.box)
-        return info
-
     def ResetEnv(self, request, context):
         print("resetting env")
         env = self.envs[request.id]
-        print("now")
         observation = env.reset()
-        print("reset env")
         obv = Observation(data=observation.ravel(), shape=observation.shape)
-        print("returning")
         return ResetEnvResponse(observation=obv)
 
     def StepEnv(self, request, context):
@@ -151,7 +141,6 @@ class EnvironmentServer(EnvironmentAPIServicer):
             3: lambda episode_id: episode_id%10==0,
             4: lambda episode_id: episode_id%100==0,
         }
-        # val = StartRecordEnvRequest.VideoSamplingRate.Value(request.video_sampling_rate)
         rate = switcher.get(request.video_sampling_rate, "Invalid sample rate")
         results_dir = get_results_dir(request.id)
         self.envs[request.id] = gym.wrappers.Monitor(env, results_dir, force=request.force, resume=request.resume, video_callable=rate, uid=request.id, write_upon_reset=True) 
@@ -178,27 +167,15 @@ class EnvironmentServer(EnvironmentAPIServicer):
                 filesuffix = "video" + str(request.episode_id).zfill(6) + ".mp4"
                 if filesuffix in f:
                     video_file = os.path.join(root, f)
-        print("video file: ")
         print(video_file)
         if video_file == "":
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details('Video not found!')
             return
-        print("opening video file")
-        # vid = imageio.get_reader(video_file,  'ffmpeg')
-        # for i, im in enumerate(vid):
-        #     im.
-        # videogen = skvideo.io.vreader(skvideo.datasets.bigbuckbunny())
-        # for frame in videogen:
-        #     print(frame.shape)
         with open(video_file, "rb") as file_object:
             while True:
-                print("reading chunk")
                 data = file_object.read(chunk_size)
-                print("returning data")
-                print(data)
                 if not data:
-                    print("breaking video")
                     break
                 yield GetVideoResponse(chunk=data)
 
