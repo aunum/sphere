@@ -1,8 +1,14 @@
 FROM python:3.7.0
 
+RUN apt-get update && \
+    apt-get install -y python-opengl && \
+    apt-get install -y xvfb && \
+    apt-get install -y ffmpeg && \
+    apt-get install -y libav-tools
+
 COPY . /sphere
 WORKDIR /sphere/cmd/env/gym
 RUN pip install -r requirements.txt
 
 EXPOSE 50051
-CMD python server.py
+CMD xvfb-run -s "-screen 0 1400x900x24" python server.py

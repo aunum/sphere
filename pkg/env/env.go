@@ -90,11 +90,11 @@ func (s *Server) Make(model string) (*Env, error) {
 	}
 	env := resp.Environment
 	fmt.Printf("created env: %s \n", env.Id)
-	// rresp, err := s.Client.StartRecordEnv(ctx, &sphere.StartRecordEnvRequest{Id: env.Id})
-	// if err != nil {
-	// 	return nil, err
-	// }
-	// fmt.Println(rresp.Message)
+	rresp, err := s.Client.StartRecordEnv(ctx, &sphere.StartRecordEnvRequest{Id: env.Id})
+	if err != nil {
+		return nil, err
+	}
+	fmt.Println(rresp.Message)
 	return &Env{
 		Environment: env,
 		Client:      s.Client,
@@ -205,6 +205,10 @@ func (e *Env) Videos(path string) ([]string, error) {
 				}
 				break
 			}
+			if err != nil {
+				return nil, err
+			}
+			// fmt.Printf("chunk: %s", string(resp.Chunk))
 			_, err = f.Write(resp.Chunk)
 			if err != nil {
 				return nil, err
@@ -231,8 +235,8 @@ func (e *Env) End() {
 		log.Fatal(err)
 	}
 	fmt.Println("saved videos: ", videoPaths)
-	err = e.Close()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// err = e.Close()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 }

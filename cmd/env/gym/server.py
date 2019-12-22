@@ -1,9 +1,15 @@
 from concurrent import futures
 from time import sleep
+from google.protobuf.timestamp_pb2 import Timestamp
 import gym
 import grpc
+import math
+import shutil
 import json
 import uuid
+# import imageio
+# import skvideo.io
+import codecs
 import os
 import numpy as np
 
@@ -23,18 +29,20 @@ def get_results_dir(env_id):
 
 def get_results(env_id):
     dir = get_results_dir(env_id)
-    results = ResultsResponse()
     videos = {}
+    episodes = {}
     for (root, _, filenames) in os.walk(dir):
         for i, f in enumerate(filenames):
+            print(f)
             if "stats.json" in f:
-                episodes = {}
                 stats_file = os.path.join(root, f)
                 with open(stats_file) as json_file:
                     data = json.load(json_file)
                     timestamps = data["timestamps"]
                     for i, t in enumerate(timestamps):
-                        er = EpisodeResult(episode_id=i, timestamp=t)
+                        nanos, seconds = math.modf(t)
+                        ts = Timestamp(seconds=int(seconds), nanos=int(nanos))
+                        er = EpisodeResult(episode_id=i, timestamp=ts)
                         episodes[i] = er
                     ep_lengths = data["episode_lengths"]
                     for i, l in enumerate(ep_lengths):
@@ -42,17 +50,19 @@ def get_results(env_id):
                     ep_rewards = data["episode_rewards"]
                     for i, r in enumerate(ep_rewards):
                         episodes[i].reward = r
-                results.episode_results = episodes
             if "meta.json" in f:
                 video_file = os.path.join(root, f)
                 with open(video_file) as json_file:
                     data = json.load(json_file)
-                    videos[data.episode_id] = Video(episode_id=data.episode_id, content_type=data.content_type)
-    return results
+                    videos[data["episode_id"]] = Video(episode_id=data["episode_id"], content_type=data["content_type"])
+    print("episodes: ")
+    print(episodes)
+    return ResultsResponse(videos=videos,episode_results=episodes)
 
 class EnvironmentServer(EnvironmentAPIServicer):
     def __init__(self):
         self.envs = {}
+        self.record = False
 
     def Info(self, request, context):
         return InfoResponse(server_name="gym")
@@ -118,6 +128,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
     def StepEnv(self, request, context):
         print("stepping")
         env = self.envs[request.id]
+        env.render()
         observation, reward, done, _ = env.step(request.value)
         observation = encode_observation(observation)
         next_episode = encode_observation(env.reset()) if done else None
@@ -143,12 +154,14 @@ class EnvironmentServer(EnvironmentAPIServicer):
         # val = StartRecordEnvRequest.VideoSamplingRate.Value(request.video_sampling_rate)
         rate = switcher.get(request.video_sampling_rate, "Invalid sample rate")
         results_dir = get_results_dir(request.id)
-        self.envs[request.id] = gym.wrappers.Monitor(env, results_dir, force=request.force, resume=request.resume, video_callable=rate, uid=request.id) 
+        self.envs[request.id] = gym.wrappers.Monitor(env, results_dir, force=request.force, resume=request.resume, video_callable=rate, uid=request.id, write_upon_reset=True) 
+        self.record = True
         return StartRecordEnvResponse(message="recording environment")
 
     def StopRecordEnv(self, request, context):
         env = self.envs[request.id]
         env.close()
+        self.record = False
         return StopRecordEnvResponse(message="stopped recording environment")
 
     # relevent https://stackoverflow.com/questions/40195740/how-to-run-openai-gym-render-over-a-server
@@ -156,6 +169,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return get_results(request.id)
 
     def GetVideo(self, request, context):
+        print("getting video")
         chunk_size=1024
         dir = get_results_dir(request.id)
         video_file = ""
@@ -164,17 +178,29 @@ class EnvironmentServer(EnvironmentAPIServicer):
                 filesuffix = "video" + str(request.episode_id).zfill(6) + ".mp4"
                 if filesuffix in f:
                     video_file = os.path.join(root, f)
-
+        print("video file: ")
+        print(video_file)
         if video_file == "":
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details('Video not found!')
             return
-        with open(video_file) as file_object:
+        print("opening video file")
+        # vid = imageio.get_reader(video_file,  'ffmpeg')
+        # for i, im in enumerate(vid):
+        #     im.
+        # videogen = skvideo.io.vreader(skvideo.datasets.bigbuckbunny())
+        # for frame in videogen:
+        #     print(frame.shape)
+        with open(video_file, "rb") as file_object:
             while True:
+                print("reading chunk")
                 data = file_object.read(chunk_size)
+                print("returning data")
+                print(data)
                 if not data:
+                    print("breaking video")
                     break
-                yield data
+                yield GetVideoResponse(chunk=data)
 
     def DeleteVideo(self, request, context):
         dir = get_results_dir(request.id)
@@ -191,7 +217,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
         env = self.envs[request.id]
         env.close()
         res_dir = get_results_dir(request.id)
-        os.rmdir(res_dir)
+        shutil.rmtree(res_dir)
         del self.envs[request.id]
         return DeleteEnvResponse(message="deleted env")
 
