@@ -66,7 +66,7 @@ func NewLocalServer(config *ServerConfig) (*Server, error) {
 		logger.Success("connected!")
 		sphereClient = sphere.NewEnvironmentAPIClient(conn)
 		resp, err := sphereClient.Info(context.Background(), &sphere.Empty{})
-		logger.Info(resp)
+		logger.Infof("server name: %s", resp.ServerName)
 		return err
 	}); err != nil {
 		logger.Fatalf("Could not connect to docker: %s", err)

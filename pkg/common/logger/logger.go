@@ -146,7 +146,7 @@ func Debugf(format string, a ...interface{}) {
 		if !TestMode {
 			if Color {
 				w = color.Output
-				s = color.BlueString(s)
+				s = color.MagentaString(s)
 			}
 		}
 		fmt.Fprintf(w, s)
@@ -167,7 +167,7 @@ func Dumpf(format string, a ...interface{}) {
 		if !TestMode {
 			if Color {
 				w = color.Output
-				s = color.PurpleString(s)
+				s = color.MagentaString(s)
 			}
 		}
 		fmt.Fprintf(w, s)
@@ -241,6 +241,8 @@ func buildFormat(f ...interface{}) string {
 	var fin string
 	for _, i := range f {
 		if _, ok := i.(error); ok {
+			fin += "%s "
+		} else if _, ok := i.(string); ok {
 			fin += "%s "
 		} else {
 			fin += "%#v "
