@@ -99,7 +99,7 @@ func (s *Server) Make(model string) (*Env, error) {
 	if err != nil {
 		return nil, err
 	}
-	fmt.Println(rresp.Message)
+	logger.Info(rresp.Message)
 	return &Env{
 		Environment: env,
 		Client:      s.Client,
@@ -143,7 +143,7 @@ func (e *Env) Close() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(resp.Message)
+	logger.Info(resp.Message)
 	return nil
 }
 
@@ -163,8 +163,7 @@ func (e *Env) PrintResults() error {
 	if err != nil {
 		return err
 	}
-	logger.Infof("results:")
-	printYAML(results)
+	logger.Infof(printYAML(results))
 	return nil
 }
 
@@ -265,8 +264,7 @@ func (e *Env) Clean() {
 
 // Print a YAML representation of the environment.
 func (e *Env) Print() {
-	logger.Infof("environment:")
-	printYAML(e.Environment)
+	logger.Infof(printYAML(e.Environment))
 }
 
 func printYAML(m proto.Message) {

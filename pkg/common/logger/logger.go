@@ -125,7 +125,7 @@ func Successf(format string, a ...interface{}) {
 		if !TestMode {
 			if Color {
 				w = color.Output
-				s = color.CyanString(s)
+				s = color.GreenString(s)
 			}
 		}
 		fmt.Fprintf(w, s)
@@ -146,7 +146,7 @@ func Debugf(format string, a ...interface{}) {
 		if !TestMode {
 			if Color {
 				w = color.Output
-				s = color.GreenString(s)
+				s = color.BlueString(s)
 			}
 		}
 		fmt.Fprintf(w, s)
@@ -167,7 +167,7 @@ func Dumpf(format string, a ...interface{}) {
 		if !TestMode {
 			if Color {
 				w = color.Output
-				s = color.GreenString(s)
+				s = color.PurpleString(s)
 			}
 		}
 		fmt.Fprintf(w, s)
