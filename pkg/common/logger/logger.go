@@ -152,10 +152,10 @@ func Info(a ...interface{}) {
 func Successf(format string, a ...interface{}) {
 	if Level >= InfoLevel {
 		a, w := extractLoggerArgs(format, a...)
-		l := WarningLabel
+		l := SuccessLabel
 		if Color {
 			w = color.Output
-			l = color.GreenString(l)
+			l = color.HiGreenString(l)
 		}
 		s := fmt.Sprintf(label(format, l), a...)
 		fmt.Fprintf(w, s)
@@ -242,7 +242,7 @@ func Warningf(format string, a ...interface{}) {
 		l := WarningLabel
 		if Color {
 			w = color.Output
-			l = color.YellowString(l)
+			l = color.HiYellowString(l)
 		}
 		s := fmt.Sprintf(label(format, l), a...)
 		fmt.Fprintf(w, s)
@@ -333,15 +333,17 @@ func labelWithoutTime(format, label string) string {
 	if !strings.Contains(format, "\n") {
 		format = fmt.Sprintf("%s%s", format, "\n")
 	}
-	return fmt.Sprintf("[%s]  %s", label, format)
+	return fmt.Sprintf("%s  %s", label, format)
 }
 
 func buildFormat(f ...interface{}) string {
 	var fin string
 	for _, i := range f {
 		if _, ok := i.(error); ok {
+			fmt.Println("is error")
 			fin += "%s "
 		} else if _, ok := i.(string); ok {
+			fmt.Println("is string")
 			fin += "%s "
 		} else {
 			fin += "%#v "
