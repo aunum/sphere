@@ -246,6 +246,7 @@ func (e *Env) End() {
 // PlayAll videos stored locally.
 func (e *Env) PlayAll() {
 	for _, video := range e.VideoPaths {
+		fmt.Printf("playing video: %s \n", video)
 		err := open.Run(video)
 		if err != nil {
 			log.Fatal(err)
@@ -260,6 +261,7 @@ func (e *Env) PlayAll() {
 // Clean any results/videos saved locally.
 func (e *Env) Clean() {
 	for _, videoPath := range e.VideoPaths {
+		fmt.Printf("removing video: %s \n", videoPath)
 		err := os.Remove(videoPath)
 		if err != nil {
 			log.Fatal(err)
