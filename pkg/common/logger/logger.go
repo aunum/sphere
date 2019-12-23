@@ -80,7 +80,7 @@ func Fataly(name string, obj interface{}) {
 		Fatal(obj)
 		return
 	}
-	Fatalf("%s object >> \n\n%s\n", name, yam)
+	Fatalf("%s >> \n\n%s\n", name, yam)
 }
 
 // Fatal logs Error message then exits with code 1.
@@ -110,7 +110,7 @@ func Errory(name string, obj interface{}) {
 		Error(obj)
 		return
 	}
-	Errorf("%s object >> \n\n%s\n", name, yam)
+	Errorf("%s >> \n\n%s\n", name, yam)
 }
 
 // Error message.
@@ -140,7 +140,7 @@ func Infoy(name string, obj interface{}) {
 		Info(obj)
 		return
 	}
-	Infof("%s object >> \n\n%s\n", name, yam)
+	Infof("%s >> \n\n%s\n", name, yam)
 }
 
 // Info message.
@@ -170,7 +170,7 @@ func Successy(name string, obj interface{}) {
 		Success(obj)
 		return
 	}
-	Successf("%s object >> \n\n%s\n", name, yam)
+	Successf("%s >> \n\n%s\n", name, yam)
 }
 
 // Success message.
@@ -200,7 +200,7 @@ func Debugy(name string, obj interface{}) {
 		Debug(obj)
 		return
 	}
-	Debugf("%s object >> \n\n%s\n", name, yam)
+	Debugf("%s >> \n\n%s\n", name, yam)
 }
 
 // Debug message.
@@ -229,7 +229,7 @@ func Dumpy(name string, obj interface{}) {
 		Error(err)
 		Dump(obj)
 	}
-	Dumpf("%s object >> \n\n%s\n", name, yam)
+	Dumpf("%s >> \n\n%s\n", name, yam)
 }
 
 // Dump message.
@@ -259,7 +259,7 @@ func Warningy(name string, obj interface{}) {
 		Warning(obj)
 		return
 	}
-	Warningf("%s object >> \n\n%s\n", name, yam)
+	Warningf("%s >> \n\n%s\n", name, yam)
 }
 
 // Warning message.

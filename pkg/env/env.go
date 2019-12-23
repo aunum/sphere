@@ -225,7 +225,7 @@ func (e *Env) End() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	logger.Successf("saved videos: %v", videoPaths)
+	logger.Successy("saved videos", videoPaths)
 	err = e.Close()
 	if err != nil {
 		log.Fatal(err)
