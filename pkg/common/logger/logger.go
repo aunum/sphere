@@ -61,12 +61,12 @@ var (
 func Fatalf(format string, a ...interface{}) {
 	if Level >= ErrorLevel {
 		a, w := extractLoggerArgs(format, a...)
-		label := ErrorLabel
-		if color {
+		l := ErrorLabel
+		if Color {
 			w = color.Output
-			label = color.RedString(label)
+			l = color.RedString(l)
 		}
-		s := fmt.Sprintf(label(format, label), a...)
+		s := fmt.Sprintf(label(format, l), a...)
 		fmt.Fprintf(w, s)
 		os.Exit(1)
 	}
@@ -91,12 +91,12 @@ func Fatal(a ...interface{}) {
 func Errorf(format string, a ...interface{}) {
 	if Level >= ErrorLevel {
 		a, w := extractLoggerArgs(format, a...)
-		label := ErrorLabel
-		if color {
+		l := ErrorLabel
+		if Color {
 			w = color.Output
-			label = color.RedString(label)
+			l = color.RedString(l)
 		}
-		s := fmt.Sprintf(label(format, label), a...)
+		s := fmt.Sprintf(label(format, l), a...)
 		fmt.Fprintf(w, s)
 	}
 }
@@ -121,12 +121,12 @@ func Infof(format string, a ...interface{}) {
 	fmt.Println("format 1 : ", format)
 	if Level >= InfoLevel {
 		a, w := extractLoggerArgs(format, a...)
-		label := InfoLabel
-		if color {
+		l := InfoLabel
+		if Color {
 			w = color.Output
-			label = color.CyanString(label)
+			l = color.CyanString(l)
 		}
-		labelf := label(format, label)
+		labelf := label(format, l)
 		fmt.Println("labelf : ", labelf)
 		s := fmt.Sprintf(labelf, a...)
 		fmt.Fprintf(w, s)
@@ -152,12 +152,12 @@ func Info(a ...interface{}) {
 func Successf(format string, a ...interface{}) {
 	if Level >= InfoLevel {
 		a, w := extractLoggerArgs(format, a...)
-		label := WarningLabel
-		if color {
+		l := WarningLabel
+		if Color {
 			w = color.Output
-			label = color.GreenString(label)
+			l = color.GreenString(l)
 		}
-		s := fmt.Sprintf(label(format, label), a...)
+		s := fmt.Sprintf(label(format, l), a...)
 		fmt.Fprintf(w, s)
 	}
 }
@@ -181,12 +181,12 @@ func Success(a ...interface{}) {
 func Debugf(format string, a ...interface{}) {
 	if Level >= DebugLevel {
 		a, w := extractLoggerArgs(format, a...)
-		label := DebugLabel
-		if color {
+		l := DebugLabel
+		if Color {
 			w = color.Output
-			label = color.MagentaString(label)
+			l = color.MagentaString(l)
 		}
-		s := fmt.Sprintf(label(format, label), a...)
+		s := fmt.Sprintf(label(format, l), a...)
 		fmt.Fprintf(w, s)
 	}
 }
@@ -210,12 +210,12 @@ func Debug(a ...interface{}) {
 func Dumpf(format string, a ...interface{}) {
 	if Level >= DumpLevel {
 		a, w := extractLoggerArgs(format, a...)
-		label := DumpLabel
-		if color {
+		l := DumpLabel
+		if Color {
 			w = color.Output
-			label = color.BlueString(label)
+			l = color.BlueString(l)
 		}
-		s := fmt.Sprintf(label(format, label), a...)
+		s := fmt.Sprintf(label(format, l), a...)
 		fmt.Fprintf(w, s)
 	}
 }
@@ -239,12 +239,12 @@ func Dump(a ...interface{}) {
 func Warningf(format string, a ...interface{}) {
 	if Level >= WarningLevel {
 		a, w := extractLoggerArgs(format, a...)
-		label := WarningLabel
-		if color {
+		l := WarningLabel
+		if Color {
 			w = color.Output
-			label = color.YellowString(label)
+			l = color.YellowString(l)
 		}
-		s := fmt.Sprintf(label(format, label), a...)
+		s := fmt.Sprintf(label(format, l), a...)
 		fmt.Fprintf(w, s)
 	}
 }
