@@ -61,14 +61,12 @@ var (
 func Fatalf(format string, a ...interface{}) {
 	if Level >= ErrorLevel {
 		a, w := extractLoggerArgs(format, a...)
-		s := fmt.Sprintf(label(format, ErrorLabel), a...)
-
-		if !TestMode {
-			if Color {
-				w = color.Output
-				s = color.RedString(s)
-			}
+		label := ErrorLabel
+		if color {
+			w = color.Output
+			label = color.RedString(label)
 		}
+		s := fmt.Sprintf(label(format, label), a...)
 		fmt.Fprintf(w, s)
 		os.Exit(1)
 	}
@@ -81,7 +79,7 @@ func Fataly(name string, obj interface{}) {
 		Error(err)
 		Fatal(obj)
 	}
-	Fatalf("%s \n%s", name, yam)
+	Fatalf("%s object >> \n\n%s\n", name, yam)
 }
 
 // Fatal logs Error message then exits with code 1.
@@ -93,14 +91,12 @@ func Fatal(a ...interface{}) {
 func Errorf(format string, a ...interface{}) {
 	if Level >= ErrorLevel {
 		a, w := extractLoggerArgs(format, a...)
-		s := fmt.Sprintf(label(format, ErrorLabel), a...)
-
-		if !TestMode {
-			if Color {
-				w = color.Output
-				s = color.RedString(s)
-			}
+		label := ErrorLabel
+		if color {
+			w = color.Output
+			label = color.RedString(label)
 		}
+		s := fmt.Sprintf(label(format, label), a...)
 		fmt.Fprintf(w, s)
 	}
 }
@@ -112,7 +108,7 @@ func Errory(name string, obj interface{}) {
 		Error(err)
 		Error(obj)
 	}
-	Errorf("%s \n%s", name, yam)
+	Errorf("%s object >> \n\n%s\n", name, yam)
 }
 
 // Error message.
@@ -122,16 +118,17 @@ func Error(a ...interface{}) {
 
 // Infof is a formatted Info message.
 func Infof(format string, a ...interface{}) {
+	fmt.Println("format 1 : ", format)
 	if Level >= InfoLevel {
 		a, w := extractLoggerArgs(format, a...)
-		s := fmt.Sprintf(label(format, InfoLabel), a...)
-
-		if !TestMode {
-			if Color {
-				w = color.Output
-				s = color.CyanString(s)
-			}
+		label := InfoLabel
+		if color {
+			w = color.Output
+			label = color.CyanString(label)
 		}
+		labelf := label(format, label)
+		fmt.Println("labelf : ", labelf)
+		s := fmt.Sprintf(labelf, a...)
 		fmt.Fprintf(w, s)
 	}
 }
@@ -143,7 +140,7 @@ func Infoy(name string, obj interface{}) {
 		Error(err)
 		Info(obj)
 	}
-	Infof("%s \n%s", name, yam)
+	Infof("%s object >> \n\n%s\n", name, yam)
 }
 
 // Info message.
@@ -155,14 +152,12 @@ func Info(a ...interface{}) {
 func Successf(format string, a ...interface{}) {
 	if Level >= InfoLevel {
 		a, w := extractLoggerArgs(format, a...)
-		s := fmt.Sprintf(label(format, SuccessLabel), a...)
-
-		if !TestMode {
-			if Color {
-				w = color.Output
-				s = color.GreenString(s)
-			}
+		label := WarningLabel
+		if color {
+			w = color.Output
+			label = color.GreenString(label)
 		}
+		s := fmt.Sprintf(label(format, label), a...)
 		fmt.Fprintf(w, s)
 	}
 }
@@ -174,7 +169,7 @@ func Successy(name string, obj interface{}) {
 		Error(err)
 		Success(obj)
 	}
-	Successf("%s \n%s", name, yam)
+	Successf("%s object >> \n\n%s\n", name, yam)
 }
 
 // Success message.
@@ -186,14 +181,12 @@ func Success(a ...interface{}) {
 func Debugf(format string, a ...interface{}) {
 	if Level >= DebugLevel {
 		a, w := extractLoggerArgs(format, a...)
-		s := fmt.Sprintf(label(format, DebugLabel), a...)
-
-		if !TestMode {
-			if Color {
-				w = color.Output
-				s = color.MagentaString(s)
-			}
+		label := DebugLabel
+		if color {
+			w = color.Output
+			label = color.MagentaString(label)
 		}
+		s := fmt.Sprintf(label(format, label), a...)
 		fmt.Fprintf(w, s)
 	}
 }
@@ -205,7 +198,7 @@ func Debugy(name string, obj interface{}) {
 		Error(err)
 		Debug(obj)
 	}
-	Debugf("%s \n%s", name, yam)
+	Debugf("%s object >> \n\n%s\n", name, yam)
 }
 
 // Debug message.
@@ -217,14 +210,12 @@ func Debug(a ...interface{}) {
 func Dumpf(format string, a ...interface{}) {
 	if Level >= DumpLevel {
 		a, w := extractLoggerArgs(format, a...)
-		s := fmt.Sprintf(label(format, DumpLabel), a...)
-
-		if !TestMode {
-			if Color {
-				w = color.Output
-				s = color.MagentaString(s)
-			}
+		label := DumpLabel
+		if color {
+			w = color.Output
+			label = color.BlueString(label)
 		}
+		s := fmt.Sprintf(label(format, label), a...)
 		fmt.Fprintf(w, s)
 	}
 }
@@ -236,7 +227,7 @@ func Dumpy(name string, obj interface{}) {
 		Error(err)
 		Dump(obj)
 	}
-	Dumpf("%s \n%s", name, yam)
+	Dumpf("%s object >> \n\n%s\n", name, yam)
 }
 
 // Dump message.
@@ -248,14 +239,12 @@ func Dump(a ...interface{}) {
 func Warningf(format string, a ...interface{}) {
 	if Level >= WarningLevel {
 		a, w := extractLoggerArgs(format, a...)
-		s := fmt.Sprintf(label(format, WarningLabel), a...)
-
-		if !TestMode {
-			if Color {
-				w = color.Output
-				s = color.YellowString(s)
-			}
+		label := WarningLabel
+		if color {
+			w = color.Output
+			label = color.YellowString(label)
 		}
+		s := fmt.Sprintf(label(format, label), a...)
 		fmt.Fprintf(w, s)
 	}
 }
@@ -267,12 +256,47 @@ func Warningy(name string, obj interface{}) {
 		Error(err)
 		Warning(obj)
 	}
-	Warningf("%s \n%s", name, yam)
+	Warningf("%s object >> \n\n%s\n", name, yam)
 }
 
 // Warning message.
 func Warning(a ...interface{}) {
 	Warningf(buildFormat(a), a...)
+}
+
+// SPrintYAML returns a YAML string for an object and has support for proto messages.
+func SPrintYAML(a interface{}) (string, error) {
+	var out string
+	if m, ok := a.(proto.Message); ok {
+		marshaller := &jsonpb.Marshaler{}
+		var b bytes.Buffer
+		err := marshaller.Marshal(&b, m)
+		if err != nil {
+			return out, err
+		}
+		yam, err := yamlconv.JSONToYAML(b.Bytes())
+		if err != nil {
+			return out, err
+		}
+		out = string(yam)
+	} else {
+		b, err := yaml.Marshal(a)
+		if err != nil {
+			return out, err
+		}
+		out = string(b)
+	}
+	return out, nil
+}
+
+// PrintYAML prints the YAML string of an object and has support for proto messages.
+func PrintYAML(a interface{}) error {
+	s, err := SPrintYAML(a)
+	if err != nil {
+		return err
+	}
+	fmt.Println(s)
+	return nil
 }
 
 func extractLoggerArgs(format string, a ...interface{}) ([]interface{}, io.Writer) {
@@ -324,39 +348,4 @@ func buildFormat(f ...interface{}) string {
 		}
 	}
 	return fin
-}
-
-// SPrintYAML returns a YAML string for an object and has support for proto messages.
-func SPrintYAML(a interface{}) (string, error) {
-	var out string
-	if m, ok := a.(proto.Message); ok {
-		marshaller := &jsonpb.Marshaler{}
-		var b bytes.Buffer
-		err := marshaller.Marshal(&b, m)
-		if err != nil {
-			return out, err
-		}
-		yam, err := yamlconv.JSONToYAML(b.Bytes())
-		if err != nil {
-			return out, err
-		}
-		out = string(yam)
-	} else {
-		b, err := yaml.Marshal(a)
-		if err != nil {
-			return out, err
-		}
-		out = string(b)
-	}
-	return out, nil
-}
-
-// PrintYAML prints the YAML string of an object and has support for proto messages.
-func PrintYAML(a interface{}) error {
-	s, err := SPrintYAML(a)
-	if err != nil {
-		return err
-	}
-	fmt.Println(s)
-	return nil
 }

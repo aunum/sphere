@@ -38,6 +38,7 @@ var GymServerConfig = &ServerConfig{Image: "sphereproject/gym", Version: "latest
 
 // NewLocalServer creates a new environment server by launching a docker container and connecting to it.
 func NewLocalServer(config *ServerConfig) (*Server, error) {
+	logger.Info("creating local server")
 	pool, err := dockertest.NewPool("")
 	if err != nil {
 		return nil, fmt.Errorf("Could not connect to docker: %s", err)
@@ -59,13 +60,12 @@ func NewLocalServer(config *ServerConfig) (*Server, error) {
 		if err != nil {
 			return err
 		}
-		logger.Success("connected!")
 		sphereClient = sphere.NewEnvironmentAPIClient(conn)
 		resp, err := sphereClient.Info(context.Background(), &sphere.Empty{})
-		logger.Infof("server name: %s", resp.ServerName)
+		logger.Successf("connected to server %q!", resp.ServerName)
 		return err
 	}); err != nil {
-		logger.Fatalf("Could not connect to docker: %s", err)
+		return nil, fmt.Errorf("Could not connect to docker: %s", err)
 	}
 
 	return &Server{
