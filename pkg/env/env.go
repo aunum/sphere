@@ -218,6 +218,7 @@ func (e *Env) Videos(path string) ([]string, error) {
 		}
 		videoPaths = append(videoPaths, fp)
 	}
+	e.VideoPaths = videoPaths
 	return videoPaths, nil
 }
 
