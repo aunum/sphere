@@ -85,7 +85,7 @@ func Fataly(name string, obj interface{}) {
 
 // Fatal logs Error message then exits with code 1.
 func Fatal(a ...interface{}) {
-	Fatalf(buildFormat(a), a...)
+	Fatalf(buildFormat(a...), a...)
 }
 
 // Errorf is a formatted Error message.
@@ -114,7 +114,7 @@ func Errory(name string, obj interface{}) {
 
 // Error message.
 func Error(a ...interface{}) {
-	Errorf(buildFormat(a), a...)
+	Errorf(buildFormat(a...), a...)
 }
 
 // Infof is a formatted Info message.
@@ -146,7 +146,7 @@ func Infoy(name string, obj interface{}) {
 
 // Info message.
 func Info(a ...interface{}) {
-	Infof(buildFormat(a), a...)
+	Infof(buildFormat(a...), a...)
 }
 
 // Successf is a formatted Success message.
@@ -175,7 +175,7 @@ func Successy(name string, obj interface{}) {
 
 // Success message.
 func Success(a ...interface{}) {
-	Successf(buildFormat(a), a...)
+	Successf(buildFormat(a...), a...)
 }
 
 // Debugf is a formatted Debug message.
@@ -204,7 +204,7 @@ func Debugy(name string, obj interface{}) {
 
 // Debug message.
 func Debug(a ...interface{}) {
-	Debugf(buildFormat(a), a...)
+	Debugf(buildFormat(a...), a...)
 }
 
 // Dumpf is a formatted Dump message.
@@ -233,7 +233,7 @@ func Dumpy(name string, obj interface{}) {
 
 // Dump message.
 func Dump(a ...interface{}) {
-	Dumpf(buildFormat(a), a...)
+	Dumpf(buildFormat(a...), a...)
 }
 
 // Warningf is a formatted Warning message.
@@ -262,7 +262,7 @@ func Warningy(name string, obj interface{}) {
 
 // Warning message.
 func Warning(a ...interface{}) {
-	Warningf(buildFormat(a), a...)
+	Warningf(buildFormat(a...), a...)
 }
 
 // SPrintYAML returns a YAML string for an object and has support for proto messages.
@@ -339,6 +339,7 @@ func labelWithoutTime(format, label string) string {
 
 func buildFormat(f ...interface{}) string {
 	var fin string
+	fmt.Println("f type: ", reflect.TypeOf(f))
 	for _, i := range f {
 		if _, ok := i.(error); ok {
 			fmt.Println("is error")
