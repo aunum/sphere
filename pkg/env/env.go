@@ -13,6 +13,7 @@ import (
 
 	"github.com/ghodss/yaml"
 	"github.com/golang/protobuf/jsonpb"
+	"github.com/golang/protobuf/proto"
 	"github.com/ory/dockertest"
 	sphere "github.com/pbarker/sphere/api/gen/go/v1alpha"
 	"github.com/skratchdot/open-golang/open"
@@ -161,17 +162,7 @@ func (e *Env) PrintResults() error {
 	if err != nil {
 		return err
 	}
-	marshaller := &jsonpb.Marshaler{}
-	var b bytes.Buffer
-	err = marshaller.Marshal(&b, results)
-	if err != nil {
-		return err
-	}
-	yam, err := yaml.JSONToYAML(b.Bytes())
-	if err != nil {
-		return err
-	}
-	fmt.Println(string(yam))
+	printYAML(results)
 	return nil
 }
 
@@ -253,7 +244,7 @@ func (e *Env) PlayAll() {
 			log.Fatal(err)
 		}
 	}
-	fmt.Print("press any key to remove videos or ctrl+c to exit and keep")
+	fmt.Print("\npress any key to remove videos or ctrl+c to exit and keep\n")
 	input := bufio.NewScanner(os.Stdin)
 	input.Scan()
 	e.Clean()
@@ -268,4 +259,23 @@ func (e *Env) Clean() {
 			log.Fatal(err)
 		}
 	}
+}
+
+// Print a YAML representation of the environment.
+func (e *Env) Print() {
+	printYAML(e.Environment)
+}
+
+func printYAML(m proto.Message) {
+	marshaller := &jsonpb.Marshaler{}
+	var b bytes.Buffer
+	err = marshaller.Marshal(&b, m)
+	if err != nil {
+		return err
+	}
+	yam, err := yaml.JSONToYAML(b.Bytes())
+	if err != nil {
+		return err
+	}
+	fmt.Println(string(yam))
 }
