@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"reflect"
 	"strings"
 	"time"
 
@@ -79,6 +78,7 @@ func Fataly(name string, obj interface{}) {
 	if err != nil {
 		Error(err)
 		Fatal(obj)
+		return
 	}
 	Fatalf("%s object >> \n\n%s\n", name, yam)
 }
@@ -108,6 +108,7 @@ func Errory(name string, obj interface{}) {
 	if err != nil {
 		Error(err)
 		Error(obj)
+		return
 	}
 	Errorf("%s object >> \n\n%s\n", name, yam)
 }
@@ -119,7 +120,6 @@ func Error(a ...interface{}) {
 
 // Infof is a formatted Info message.
 func Infof(format string, a ...interface{}) {
-	fmt.Println("format 1 : ", format)
 	if Level >= InfoLevel {
 		a, w := extractLoggerArgs(format, a...)
 		l := InfoLabel
@@ -127,9 +127,7 @@ func Infof(format string, a ...interface{}) {
 			w = color.Output
 			l = color.CyanString(l)
 		}
-		labelf := label(format, l)
-		fmt.Println("labelf : ", labelf)
-		s := fmt.Sprintf(labelf, a...)
+		s := fmt.Sprintf(label(format, l), a...)
 		fmt.Fprintf(w, s)
 	}
 }
@@ -140,6 +138,7 @@ func Infoy(name string, obj interface{}) {
 	if err != nil {
 		Error(err)
 		Info(obj)
+		return
 	}
 	Infof("%s object >> \n\n%s\n", name, yam)
 }
@@ -169,6 +168,7 @@ func Successy(name string, obj interface{}) {
 	if err != nil {
 		Error(err)
 		Success(obj)
+		return
 	}
 	Successf("%s object >> \n\n%s\n", name, yam)
 }
@@ -198,6 +198,7 @@ func Debugy(name string, obj interface{}) {
 	if err != nil {
 		Error(err)
 		Debug(obj)
+		return
 	}
 	Debugf("%s object >> \n\n%s\n", name, yam)
 }
@@ -256,6 +257,7 @@ func Warningy(name string, obj interface{}) {
 	if err != nil {
 		Error(err)
 		Warning(obj)
+		return
 	}
 	Warningf("%s object >> \n\n%s\n", name, yam)
 }
@@ -339,16 +341,12 @@ func labelWithoutTime(format, label string) string {
 
 func buildFormat(f ...interface{}) string {
 	var fin string
-	fmt.Println("f type: ", reflect.TypeOf(f))
 	for _, i := range f {
 		if _, ok := i.(error); ok {
-			fmt.Println("is error")
 			fin += "%s "
 		} else if _, ok := i.(string); ok {
-			fmt.Println("is string")
 			fin += "%s "
 		} else {
-			fmt.Println("i type: ", reflect.TypeOf(i))
 			fin += "%#v "
 		}
 	}
