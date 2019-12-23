@@ -62,7 +62,7 @@ func NewLocalServer(config *ServerConfig) (*Server, error) {
 		}
 		sphereClient = sphere.NewEnvironmentAPIClient(conn)
 		resp, err := sphereClient.Info(context.Background(), &sphere.Empty{})
-		logger.Successf("connected to server %q!", resp.ServerName)
+		logger.Successf("connected to server %q", resp.ServerName)
 		return err
 	}); err != nil {
 		return nil, fmt.Errorf("Could not connect to docker: %s", err)
@@ -90,12 +90,12 @@ func (s *Server) Make(model string) (*Env, error) {
 		return nil, err
 	}
 	env := resp.Environment
-	logger.Infof("created env: %s", env.Id)
+	logger.Successf("created env: %s", env.Id)
 	rresp, err := s.Client.StartRecordEnv(ctx, &sphere.StartRecordEnvRequest{Id: env.Id})
 	if err != nil {
 		return nil, err
 	}
-	logger.Info(rresp.Message)
+	logger.Success(rresp.Message)
 	return &Env{
 		Environment: env,
 		Client:      s.Client,
@@ -139,7 +139,7 @@ func (e *Env) Close() error {
 	if err != nil {
 		return err
 	}
-	logger.Info(resp.Message)
+	logger.Success(resp.Message)
 	return nil
 }
 
@@ -225,7 +225,7 @@ func (e *Env) End() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	logger.Infof("saved videos: %v", videoPaths)
+	logger.Successf("saved videos: %v", videoPaths)
 	err = e.Close()
 	if err != nil {
 		log.Fatal(err)
@@ -250,12 +250,13 @@ func (e *Env) PlayAll() {
 // Clean any results/videos saved locally.
 func (e *Env) Clean() {
 	for _, videoPath := range e.VideoPaths {
-		logger.Infof("removing video: %s", videoPath)
 		err := os.Remove(videoPath)
 		if err != nil {
 			log.Fatal(err)
 		}
+		logger.Debugf("removed video: %s", videoPath)
 	}
+	logger.Success("removed all local videos")
 }
 
 // Print a YAML representation of the environment.
