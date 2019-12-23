@@ -269,13 +269,13 @@ func (e *Env) Print() {
 func printYAML(m proto.Message) {
 	marshaller := &jsonpb.Marshaler{}
 	var b bytes.Buffer
-	err = marshaller.Marshal(&b, m)
+	err := marshaller.Marshal(&b, m)
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 	yam, err := yaml.JSONToYAML(b.Bytes())
 	if err != nil {
-		return err
+		log.Fatal(err)
 	}
 	fmt.Println(string(yam))
 }
