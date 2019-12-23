@@ -2,7 +2,6 @@ package env
 
 import (
 	"bufio"
-	"bytes"
 	"context"
 	"fmt"
 	"io"
@@ -11,9 +10,6 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/ghodss/yaml"
-	"github.com/golang/protobuf/jsonpb"
-	"github.com/golang/protobuf/proto"
 	"github.com/ory/dockertest"
 	sphere "github.com/pbarker/sphere/api/gen/go/v1alpha"
 	"github.com/pbarker/sphere/pkg/common/logger"
@@ -163,7 +159,7 @@ func (e *Env) PrintResults() error {
 	if err != nil {
 		return err
 	}
-	logger.Infof(printYAML(results))
+	logger.Infoy(results)
 	return nil
 }
 
@@ -264,19 +260,5 @@ func (e *Env) Clean() {
 
 // Print a YAML representation of the environment.
 func (e *Env) Print() {
-	logger.Infof(printYAML(e.Environment))
-}
-
-func printYAML(m proto.Message) {
-	marshaller := &jsonpb.Marshaler{}
-	var b bytes.Buffer
-	err := marshaller.Marshal(&b, m)
-	if err != nil {
-		log.Fatal(err)
-	}
-	yam, err := yaml.JSONToYAML(b.Bytes())
-	if err != nil {
-		log.Fatal(err)
-	}
-	fmt.Println(string(yam))
+	logger.Infoy(e.Environment)
 }
