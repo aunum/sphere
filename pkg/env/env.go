@@ -16,6 +16,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/ory/dockertest"
 	sphere "github.com/pbarker/sphere/api/gen/go/v1alpha"
+	"github.com/pbarker/sphere/pkg/common/logger"
 	"github.com/skratchdot/open-golang/open"
 	"google.golang.org/grpc"
 )
@@ -62,13 +63,13 @@ func NewLocalServer(config *ServerConfig) (*Server, error) {
 		if err != nil {
 			return err
 		}
-		fmt.Println("connected!")
+		logger.Success("connected!")
 		sphereClient = sphere.NewEnvironmentAPIClient(conn)
 		resp, err := sphereClient.Info(context.Background(), &sphere.Empty{})
-		fmt.Println(resp)
+		logger.Info(resp)
 		return err
 	}); err != nil {
-		log.Fatalf("Could not connect to docker: %s", err)
+		logger.Fatalf("Could not connect to docker: %s", err)
 	}
 
 	return &Server{
@@ -93,7 +94,7 @@ func (s *Server) Make(model string) (*Env, error) {
 		return nil, err
 	}
 	env := resp.Environment
-	fmt.Printf("created env: %s \n", env.Id)
+	logger.Infof("created env: %s", env.Id)
 	rresp, err := s.Client.StartRecordEnv(ctx, &sphere.StartRecordEnvRequest{Id: env.Id})
 	if err != nil {
 		return nil, err
@@ -162,6 +163,7 @@ func (e *Env) PrintResults() error {
 	if err != nil {
 		return err
 	}
+	logger.Infof("results:")
 	printYAML(results)
 	return nil
 }
@@ -228,7 +230,7 @@ func (e *Env) End() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("saved videos: ", videoPaths)
+	logger.Infof("saved videos: %v", videoPaths)
 	err = e.Close()
 	if err != nil {
 		log.Fatal(err)
@@ -238,7 +240,7 @@ func (e *Env) End() {
 // PlayAll videos stored locally.
 func (e *Env) PlayAll() {
 	for _, video := range e.VideoPaths {
-		fmt.Printf("playing video: %s \n", video)
+		logger.Debugf("playing video: %s", video)
 		err := open.Run(video)
 		if err != nil {
 			log.Fatal(err)
@@ -253,7 +255,7 @@ func (e *Env) PlayAll() {
 // Clean any results/videos saved locally.
 func (e *Env) Clean() {
 	for _, videoPath := range e.VideoPaths {
-		fmt.Printf("removing video: %s \n", videoPath)
+		logger.Infof("removing video: %s", videoPath)
 		err := os.Remove(videoPath)
 		if err != nil {
 			log.Fatal(err)
@@ -263,6 +265,7 @@ func (e *Env) Clean() {
 
 // Print a YAML representation of the environment.
 func (e *Env) Print() {
+	logger.Infof("environment:")
 	printYAML(e.Environment)
 }
 
