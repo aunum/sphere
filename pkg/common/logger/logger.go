@@ -9,6 +9,10 @@ import (
 	"time"
 
 	"github.com/fatih/color"
+	yamlconv "github.com/ghodss/yaml"
+	"github.com/golang/protobuf/jsonpb"
+	"github.com/golang/protobuf/proto"
+	yaml "gopkg.in/yaml.v2"
 )
 
 // Logger creates a new instance of a logger.
@@ -328,11 +332,11 @@ func SPrintYAML(a interface{}) (string, error) {
 	if _, ok := a.(proto.Message); ok {
 		marshaller := &jsonpb.Marshaler{}
 		var b bytes.Buffer
-		err := marshaller.Marshal(&b, m)
+		err := marshaller.Marshal(&b, a)
 		if err != nil {
 			return out, err
 		}
-		yam, err := yaml.JSONToYAML(b.Bytes())
+		yam, err := yamlconv.JSONToYAML(b.Bytes())
 		if err != nil {
 			return out, err
 		}
@@ -351,7 +355,8 @@ func SPrintYAML(a interface{}) (string, error) {
 func PrintYAML(a interface{}) error {
 	s, err := SPrintYAML(a)
 	if err != nil {
-		Error(err)
+		return err
 	}
 	fmt.Println(s)
+	return nil
 }
