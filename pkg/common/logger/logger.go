@@ -329,10 +329,10 @@ func buildFormat(f ...interface{}) string {
 // SPrintYAML returns a YAML string for an object and has support for proto messages.
 func SPrintYAML(a interface{}) (string, error) {
 	var out string
-	if _, ok := a.(proto.Message); ok {
+	if m, ok := a.(proto.Message); ok {
 		marshaller := &jsonpb.Marshaler{}
 		var b bytes.Buffer
-		err := marshaller.Marshal(&b, a)
+		err := marshaller.Marshal(&b, m)
 		if err != nil {
 			return out, err
 		}
