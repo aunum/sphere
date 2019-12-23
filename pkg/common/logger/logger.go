@@ -49,7 +49,7 @@ var (
 	// TestMode is enabled.
 	TestMode = false
 	// Timestamps should be printed.
-	Timestamps = true
+	Timestamps = false
 )
 
 // Fatalf message logs formatted Error then exits.
