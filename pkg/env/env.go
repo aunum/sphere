@@ -159,7 +159,7 @@ func (e *Env) PrintResults() error {
 	if err != nil {
 		return err
 	}
-	logger.Infoy(results)
+	logger.Infoy("results", results)
 	return nil
 }
 
@@ -260,5 +260,5 @@ func (e *Env) Clean() {
 
 // Print a YAML representation of the environment.
 func (e *Env) Print() {
-	logger.Infoy(e.Environment)
+	logger.Infoy("environment", e.Environment)
 }

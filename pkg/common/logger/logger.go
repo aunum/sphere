@@ -75,13 +75,13 @@ func Fatalf(format string, a ...interface{}) {
 }
 
 // Fataly prints the YAML represtation of an object at Error level then exits with code 1.
-func Fataly(obj interface{}) {
+func Fataly(name string, obj interface{}) {
 	yam, err := SPrintYAML(obj)
 	if err != nil {
 		Error(err)
 		Fatal(obj)
 	}
-	Fatalf("%s", yam)
+	Fatalf("%s \n%s", name, yam)
 }
 
 // Fatal logs Error message then exits with code 1.
@@ -106,13 +106,13 @@ func Errorf(format string, a ...interface{}) {
 }
 
 // Errory prints the YAML represtation of an object at Error level.
-func Errory(obj interface{}) {
+func Errory(name string, obj interface{}) {
 	yam, err := SPrintYAML(obj)
 	if err != nil {
 		Error(err)
 		Error(obj)
 	}
-	Errorf("%s", yam)
+	Errorf("%s \n%s", name, yam)
 }
 
 // Error message.
@@ -137,13 +137,13 @@ func Infof(format string, a ...interface{}) {
 }
 
 // Infoy prints the YAML represtation of an object at Info level.
-func Infoy(obj interface{}) {
+func Infoy(name string, obj interface{}) {
 	yam, err := SPrintYAML(obj)
 	if err != nil {
 		Error(err)
 		Info(obj)
 	}
-	Infof("%s", yam)
+	Infof("%s \n%s", name, yam)
 }
 
 // Info message.
@@ -168,13 +168,13 @@ func Successf(format string, a ...interface{}) {
 }
 
 // Successy prints the YAML represtation of an object at Success level.
-func Successy(obj interface{}) {
+func Successy(name string, obj interface{}) {
 	yam, err := SPrintYAML(obj)
 	if err != nil {
 		Error(err)
 		Success(obj)
 	}
-	Successf("%s", yam)
+	Successf("%s \n%s", name, yam)
 }
 
 // Success message.
@@ -199,13 +199,13 @@ func Debugf(format string, a ...interface{}) {
 }
 
 // Debugy prints the YAML represtation of an object at Debug level.
-func Debugy(obj interface{}) {
+func Debugy(name string, obj interface{}) {
 	yam, err := SPrintYAML(obj)
 	if err != nil {
 		Error(err)
 		Debug(obj)
 	}
-	Debugf("%s", yam)
+	Debugf("%s \n%s", name, yam)
 }
 
 // Debug message.
@@ -230,13 +230,13 @@ func Dumpf(format string, a ...interface{}) {
 }
 
 // Dumpy prints the YAML represtation of an object at Dump level.
-func Dumpy(obj interface{}) {
+func Dumpy(name string, obj interface{}) {
 	yam, err := SPrintYAML(obj)
 	if err != nil {
 		Error(err)
 		Dump(obj)
 	}
-	Dumpf("%s", yam)
+	Dumpf("%s \n%s", name, yam)
 }
 
 // Dump message.
@@ -261,13 +261,13 @@ func Warningf(format string, a ...interface{}) {
 }
 
 // Warningy prints the YAML represtation of an object at Warning level.
-func Warningy(obj interface{}) {
+func Warningy(name string, obj interface{}) {
 	yam, err := SPrintYAML(obj)
 	if err != nil {
 		Error(err)
 		Warning(obj)
 	}
-	Warningf("%s", yam)
+	Warningf("%s \n%s", name, yam)
 }
 
 // Warning message.
