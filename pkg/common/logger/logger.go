@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"reflect"
 	"strings"
 	"time"
 
@@ -346,6 +347,7 @@ func buildFormat(f ...interface{}) string {
 			fmt.Println("is string")
 			fin += "%s "
 		} else {
+			fmt.Println("i type: ", reflect.TypeOf(i))
 			fin += "%#v "
 		}
 	}
