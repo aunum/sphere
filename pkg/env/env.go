@@ -15,6 +15,7 @@ import (
 	"github.com/pbarker/sphere/pkg/common/logger"
 	"github.com/skratchdot/open-golang/open"
 	"google.golang.org/grpc"
+	"gorgonia.org/tensor"
 )
 
 // Server of environments.
@@ -27,8 +28,10 @@ type Server struct {
 type ServerConfig struct {
 	// Docker image of environment.
 	Image string
+
 	// Version of the docker image.
 	Version string
+
 	// Port the environment is exposed on.
 	Port string
 }
@@ -76,8 +79,10 @@ func NewLocalServer(config *ServerConfig) (*Server, error) {
 // Env is a convienience environment wrapper.
 type Env struct {
 	*sphere.Environment
+
 	// Client to connect to the Sphere server.
 	Client sphere.EnvironmentAPIClient
+
 	// VideoPaths of result videos downloadloaded from the server.
 	VideoPaths []string
 }
@@ -103,13 +108,14 @@ func (s *Server) Make(model string) (*Env, error) {
 }
 
 // Step through the environment.
-func (e *Env) Step(value int) (*sphere.StepEnvResponse, error) {
+func (e *Env) Step(value int) (observation *tensor.Dense, reward float32, done bool, err error) {
 	ctx := context.Background()
 	resp, err := e.Client.StepEnv(ctx, &sphere.StepEnvRequest{Id: e.Id, Value: int32(value)})
 	if err != nil {
-		return nil, err
+		return observation, reward, done, err
 	}
-	return resp, nil
+	t := observationToTensor(resp.Observation)
+	return t, resp.Reward, resp.Done, nil
 }
 
 // SampleAction returns a sample action for the environment.
@@ -123,13 +129,14 @@ func (e *Env) SampleAction() (int, error) {
 }
 
 // Reset the environment.
-func (e *Env) Reset() (*sphere.Observation, error) {
+func (e *Env) Reset() (observation *tensor.Dense, err error) {
 	ctx := context.Background()
 	resp, err := e.Client.ResetEnv(ctx, &sphere.ResetEnvRequest{Id: e.Id})
 	if err != nil {
 		return nil, err
 	}
-	return resp.Observation, nil
+	t := observationToTensor(resp.Observation)
+	return t, nil
 }
 
 // Close the environment.
@@ -262,4 +269,13 @@ func (e *Env) Clean() {
 // Print a YAML representation of the environment.
 func (e *Env) Print() {
 	logger.Infoy("environment", e.Environment)
+}
+
+func observationToTensor(o *sphere.Observation) *tensor.Dense {
+	shape := []int{}
+	for _, i := range o.GetShape() {
+		shape = append(shape, int(i))
+	}
+	t := tensor.New(tensor.WithShape(shape...), tensor.WithBacking(o.Data))
+	return t
 }

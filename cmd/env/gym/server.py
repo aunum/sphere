@@ -121,10 +121,8 @@ class EnvironmentServer(EnvironmentAPIServicer):
         env.render()
         observation, reward, done, _ = env.step(request.value)
         observation = encode_observation(observation)
-        next_episode = encode_observation(env.reset()) if done else None
         return StepEnvResponse(observation=observation,
                           reward=reward,
-                          next_episode=next_episode,
                           done=done)
 
     def SampleAction(self, request, context):
