@@ -107,15 +107,27 @@ func (s *Server) Make(model string) (*Env, error) {
 	}, nil
 }
 
+// Outcome of taking an action.
+type Outcome struct {
+	// Observation after taking action.
+	Observation *tensor.Dense
+
+	// Reward from action.
+	Reward float64
+
+	// Whether the environment is done.
+	Done bool
+}
+
 // Step through the environment.
-func (e *Env) Step(value int) (observation *tensor.Dense, reward float64, done bool, err error) {
+func (e *Env) Step(value int) (*Outcome, error) {
 	ctx := context.Background()
 	resp, err := e.Client.StepEnv(ctx, &sphere.StepEnvRequest{Id: e.Id, Value: int32(value)})
 	if err != nil {
-		return observation, reward, done, err
+		return nil, err
 	}
 	t := observationToTensor(resp.Observation)
-	return t, float64(resp.Reward), resp.Done, nil
+	return &Outcome{t, float64(resp.Reward), resp.Done}, nil
 }
 
 // SampleAction returns a sample action for the environment.

@@ -26,11 +26,10 @@ func TestLocal(t *testing.T) {
 		for ts := 0; ts <= int(env.MaxEpisodeSteps); ts++ {
 			action, err := env.SampleAction()
 			require.Nil(t, err)
-			obv, reward, done, err := env.Step(action)
+			outcome, err := env.Step(action)
 			require.Nil(t, err)
-			fmt.Printf("observation: \n%+v\n", obv)
-			fmt.Printf("reward: %+v \n", reward)
-			if done {
+			fmt.Printf("outcome: \n%+v\n", outcome)
+			if outcome.Done {
 				fmt.Printf("Episode finished after %d timesteps \n", ts+1)
 				break
 			}
