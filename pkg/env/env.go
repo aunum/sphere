@@ -20,6 +20,9 @@ import (
 
 // Server of environments.
 type Server struct {
+	// Resource is the underlying docker container.
+	Resource *dockertest.Resource
+
 	// Client to connect to the Sphere server.
 	Client sphere.EnvironmentAPIClient
 }
@@ -72,7 +75,8 @@ func NewLocalServer(config *ServerConfig) (*Server, error) {
 	}
 
 	return &Server{
-		Client: sphereClient,
+		Resource: resource,
+		Client:   sphereClient,
 	}, nil
 }
 
