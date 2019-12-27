@@ -108,14 +108,14 @@ func (s *Server) Make(model string) (*Env, error) {
 }
 
 // Step through the environment.
-func (e *Env) Step(value int) (observation *tensor.Dense, reward float32, done bool, err error) {
+func (e *Env) Step(value int) (observation *tensor.Dense, reward float64, done bool, err error) {
 	ctx := context.Background()
 	resp, err := e.Client.StepEnv(ctx, &sphere.StepEnvRequest{Id: e.Id, Value: int32(value)})
 	if err != nil {
 		return observation, reward, done, err
 	}
 	t := observationToTensor(resp.Observation)
-	return t, resp.Reward, resp.Done, nil
+	return t, float64(resp.Reward), resp.Done, nil
 }
 
 // SampleAction returns a sample action for the environment.
