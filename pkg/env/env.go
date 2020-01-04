@@ -117,7 +117,7 @@ type Outcome struct {
 	Observation *tensor.Dense
 
 	// Reward from action.
-	Reward float64
+	Reward float32
 
 	// Whether the environment is done.
 	Done bool
@@ -131,7 +131,7 @@ func (e *Env) Step(value int) (*Outcome, error) {
 		return nil, err
 	}
 	t := observationToTensor(resp.Observation)
-	return &Outcome{t, float64(resp.Reward), resp.Done}, nil
+	return &Outcome{t, resp.Reward, resp.Done}, nil
 }
 
 // SampleAction returns a sample action for the environment.
