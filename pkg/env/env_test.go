@@ -13,6 +13,7 @@ import (
 func TestLocal(t *testing.T) {
 	server, err := NewLocalServer(GymServerConfig)
 	require.Nil(t, err)
+	defer server.Resource.Close()
 
 	fmt.Println("creating env")
 	env, err := server.Make("CartPole-v0")

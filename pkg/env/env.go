@@ -282,6 +282,31 @@ func (e *Env) Clean() {
 	logger.Success("removed all local videos")
 }
 
+// BoxSpace is the
+type BoxSpace struct {
+	High  *tensor.Dense
+	Low   *tensor.Dense
+	Shape []int
+}
+
+// BoxSpace returns the box space as dense tensors.
+func (e *Env) BoxSpace() (*BoxSpace, error) {
+	space := e.GetObservationSpace()
+
+	if sp := space.GetBox(); sp != nil {
+		shape := []int{}
+		for _, i := range sp.GetShape() {
+			shape = append(shape, int(i))
+		}
+		return &BoxSpace{
+			High:  tensor.New(tensor.WithShape(shape...), tensor.WithBacking(sp.GetHigh())),
+			Low:   tensor.New(tensor.WithShape(shape...), tensor.WithBacking(sp.GetLow())),
+			Shape: shape,
+		}, nil
+	}
+	return nil, fmt.Errorf("env is not a box space: %+v", space)
+}
+
 // Print a YAML representation of the environment.
 func (e *Env) Print() {
 	logger.Infoy("environment", e.Environment)
