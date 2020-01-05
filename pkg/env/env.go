@@ -177,13 +177,23 @@ type Results struct {
 }
 
 // Results results for the environment.
-func (e *Env) Results() (*sphere.ResultsResponse, error) {
+func (e *Env) Results() (*Results, error) {
 	ctx := context.Background()
 	resp, err := e.Client.Results(ctx, &sphere.ResultsRequest{Id: e.Id})
 	if err != nil {
 		return nil, err
 	}
-	return resp, nil
+	var cumulative float32
+	for _, res := range resp.EpisodeResults {
+		cumulative += res.Reward
+	}
+	avg := cumulative / float32(len(resp.EpisodeResults))
+	res := &Results{
+		Episodes:      resp.EpisodeResults,
+		Videos:        resp.Videos,
+		AverageReward: avg,
+	}
+	return res, nil
 }
 
 // PrintResults results for the environment.
