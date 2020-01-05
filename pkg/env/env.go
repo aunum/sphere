@@ -166,6 +166,16 @@ func (e *Env) Close() error {
 	return nil
 }
 
+// Results from an environment run.
+type Results struct {
+	// Episodes is a map of episode id to result.
+	Episodes map[int32]*sphere.EpisodeResult
+	// Videos is a map of episode id to result.
+	Videos map[int32]*sphere.Video
+	// AverageReward is the average reward of the episodes.
+	AverageReward float32
+}
+
 // Results results for the environment.
 func (e *Env) Results() (*sphere.ResultsResponse, error) {
 	ctx := context.Background()
