@@ -170,8 +170,10 @@ func (e *Env) Close() error {
 type Results struct {
 	// Episodes is a map of episode id to result.
 	Episodes map[int32]*sphere.EpisodeResult
+
 	// Videos is a map of episode id to result.
 	Videos map[int32]*sphere.Video
+
 	// AverageReward is the average reward of the episodes.
 	AverageReward float32
 }
@@ -304,8 +306,13 @@ func (e *Env) Clean() {
 
 // BoxSpace is the
 type BoxSpace struct {
-	High  *tensor.Dense
-	Low   *tensor.Dense
+	// High values for this space.
+	High *tensor.Dense
+
+	// Low values for this space.
+	Low *tensor.Dense
+
+	// Shape of the space.
 	Shape []int
 }
 

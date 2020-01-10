@@ -2,6 +2,7 @@ package logger
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"io"
 	"os"
@@ -12,7 +13,6 @@ import (
 	yamlconv "github.com/ghodss/yaml"
 	"github.com/golang/protobuf/jsonpb"
 	"github.com/golang/protobuf/proto"
-	yaml "gopkg.in/yaml.v2"
 )
 
 // Logger creates a new instance of a logger.
@@ -269,27 +269,29 @@ func Warning(a ...interface{}) {
 
 // SPrintYAML returns a YAML string for an object and has support for proto messages.
 func SPrintYAML(a interface{}) (string, error) {
-	var out string
+	var b []byte
+	var err error
 	if m, ok := a.(proto.Message); ok {
 		marshaller := &jsonpb.Marshaler{}
-		var b bytes.Buffer
-		err := marshaller.Marshal(&b, m)
+		var buf bytes.Buffer
+		err := marshaller.Marshal(&buf, m)
 		if err != nil {
-			return out, err
+			return "", err
 		}
-		yam, err := yamlconv.JSONToYAML(b.Bytes())
-		if err != nil {
-			return out, err
-		}
-		out = string(yam)
+		b = buf.Bytes()
 	} else {
-		b, err := yaml.Marshal(a)
+		b, err = json.Marshal(a)
 		if err != nil {
-			return out, err
+			return "", err
 		}
-		out = string(b)
 	}
-	return out, nil
+	// doing yaml this way because at times you have nested proto structs
+	// that need to be cleaned.
+	yam, err := yamlconv.JSONToYAML(b)
+	if err != nil {
+		return "", err
+	}
+	return string(yam), nil
 }
 
 // PrintYAML prints the YAML string of an object and has support for proto messages.
