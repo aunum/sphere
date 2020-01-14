@@ -19,4 +19,8 @@ To generate the API files run
 make generate
 ```
 
+## Roadmap
+- [] Support more language types (swift, rust, nim, julia)
+- [] Web frontend
+
 ## Inspiration

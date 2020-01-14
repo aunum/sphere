@@ -19,7 +19,7 @@ from env_pb2_grpc import EnvironmentAPIServicer, add_EnvironmentAPIServicer_to_s
 results_base_dir = "./results" 
 
 def encode_observation(observation):
-    return Observation(data=observation.ravel(), shape=observation.shape)
+    return Tensor(data=observation.ravel(), shape=observation.shape)
 
 def get_results_dir(env_id):
     return os.path.join(results_base_dir, env_id)
@@ -112,21 +112,18 @@ class EnvironmentServer(EnvironmentAPIServicer):
         print("resetting env")
         env = self.envs[request.id]
         observation = env.reset()
-        obv = Observation(data=observation.ravel(), shape=observation.shape)
-        return ResetEnvResponse(observation=obv)
+        return ResetEnvResponse(observation=encode_observation(observation))
 
     def StepEnv(self, request, context):
         print("stepping")
         env = self.envs[request.id]
         env.render()
-        observation, reward, done, next_observation = env.step(request.action)
+        observation, reward, done, info = env.step(request.action)
         observation = encode_observation(observation)
-        next_observation = encode_observation(next_observation)
         return StepEnvResponse(observation=observation,
                           reward=reward,
-                          next_observation=next_observation,
-                          action= action,
-                          done=done)
+                          done=done,
+                          info=info)
 
     def SampleAction(self, request, context):
         print("getting sample action")
