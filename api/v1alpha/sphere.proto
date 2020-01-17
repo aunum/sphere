@@ -1,6 +1,7 @@
 syntax = "proto3";
 
 package sphere.api.v1alpha;
+option go_package = "spherev1alpha";
 
 import "google/api/annotations.proto";
 import "google/protobuf/timestamp.proto";

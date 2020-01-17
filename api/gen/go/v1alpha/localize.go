@@ -1,4 +1,4 @@
-package sphere_api_v1alpha
+package spherev1alpha
 
 import (
 	"gorgonia.org/tensor"
