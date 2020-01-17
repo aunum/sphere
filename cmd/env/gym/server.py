@@ -1,6 +1,7 @@
 from concurrent import futures
 from time import sleep
 from google.protobuf.timestamp_pb2 import Timestamp
+from google.protobuf.struct_pb2 import Struct
 import gym
 import grpc
 import math
@@ -120,10 +121,12 @@ class EnvironmentServer(EnvironmentAPIServicer):
         env.render()
         observation, reward, done, info = env.step(request.action)
         observation = encode_observation(observation)
+        s = Struct()
+        s.update(info)
         return StepEnvResponse(observation=observation,
                           reward=reward,
                           done=done,
-                          info=info)
+                          info=s)
 
     def SampleAction(self, request, context):
         print("getting sample action")
