@@ -3,9 +3,12 @@ from time import sleep
 from google.protobuf.timestamp_pb2 import Timestamp
 from google.protobuf.struct_pb2 import Struct
 import gym
+import gym_BitFlipper
+from gym import wrappers
 import grpc
 import math
 import shutil
+import traceback
 import json
 import uuid
 import os
@@ -18,9 +21,6 @@ from env_pb2 import *
 from env_pb2_grpc import EnvironmentAPIServicer, add_EnvironmentAPIServicer_to_server as register
 
 results_base_dir = "./results" 
-
-def encode_observation(observation):
-    return Tensor(data=observation.ravel(), shape=observation.shape)
 
 def get_results_dir(env_id):
     return os.path.join(results_base_dir, env_id)
@@ -55,6 +55,9 @@ def get_results(env_id):
                     videos[data["episode_id"]] = Video(episode_id=data["episode_id"], content_type=data["content_type"])
     return ResultsResponse(videos=videos,episode_results=episodes)
 
+def encode_tensor(tensor):
+    return Tensor(data=tensor.ravel(), shape=tensor.shape)
+
 class EnvironmentServer(EnvironmentAPIServicer):
     def __init__(self):
         self.envs = {}
@@ -68,11 +71,11 @@ class EnvironmentServer(EnvironmentAPIServicer):
         observation_space = self._get_space_info(env.observation_space)
         action_space = self._get_space_info(env.action_space)
         return Environment(id=env_id,
-                    model_name=env.env.spec.id,
+                    model_name=env.spec.id,
                     observation_space=observation_space,
                     action_space=action_space,
                     num_actions=self.envs[env_id].action_space.n,
-                    max_episode_steps=self.envs[env_id]._max_episode_steps)
+                    max_episode_steps=self.envs[env_id].spec.max_episode_steps)
 
     def _get_space_info(self, space):
         name = space.__class__.__name__
@@ -89,7 +92,10 @@ class EnvironmentServer(EnvironmentAPIServicer):
     def CreateEnv(self, request, context):
         print("creating env")
         id = str(uuid.uuid4())
-        self.envs[id] = gym.make(request.model_name)
+        try:
+            self.envs[id] = gym.make(request.model_name)
+        except IndexError:
+            traceback.print_exc()
         env = self._get_env(id)
         print(env)
         return CreateEnvResponse(environment=env)
@@ -113,19 +119,26 @@ class EnvironmentServer(EnvironmentAPIServicer):
         print("resetting env")
         env = self.envs[request.id]
         observation = env.reset()
-        return ResetEnvResponse(observation=encode_observation(observation))
+        goal = Tensor()
+        if hasattr(env, "goal"):
+            info["goal"] = encode_tensor(env.goal)
+        return ResetEnvResponse(observation=encode_tensor(observation), goal=goal)
 
     def StepEnv(self, request, context):
         print("stepping")
         env = self.envs[request.id]
         env.render()
         observation, reward, done, info = env.step(request.action)
-        observation = encode_observation(observation)
+        observation = encode_tensor(observation)
+        goal = Tensor()
+        if hasattr(env, "goal"):
+            info["goal"] = encode_tensor(env.goal)
         s = Struct()
         s.update(info)
         return StepEnvResponse(observation=observation,
                           reward=reward,
                           done=done,
+                          goal=goal,
                           info=s)
 
     def SampleAction(self, request, context):
@@ -144,7 +157,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
         }
         rate = switcher.get(request.video_sampling_rate, "Invalid sample rate")
         results_dir = get_results_dir(request.id)
-        self.envs[request.id] = gym.wrappers.Monitor(env, results_dir, force=request.force, resume=request.resume, video_callable=rate, uid=request.id, write_upon_reset=True) 
+        self.envs[request.id] = wrappers.Monitor(env, results_dir, force=request.force, resume=request.resume, video_callable=rate, uid=request.id, write_upon_reset=True) 
         self.record = True
         return StartRecordEnvResponse(message="recording environment")
 
@@ -168,7 +181,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
                 filesuffix = "video" + str(request.episode_id).zfill(6) + ".mp4"
                 if filesuffix in f:
                     video_file = os.path.join(root, f)
-        print(video_file)
+        # print(video_file)
         if video_file == "":
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details('Video not found!')
@@ -198,7 +211,6 @@ class EnvironmentServer(EnvironmentAPIServicer):
         shutil.rmtree(res_dir)
         del self.envs[request.id]
         return DeleteEnvResponse(message="deleted env")
-
 
 def serve(address='[::]:50051'):
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))

@@ -4,11 +4,15 @@ RUN apt-get update && \
     apt-get install -y python-opengl && \
     apt-get install -y xvfb && \
     apt-get install -y ffmpeg && \
-    apt-get install -y libav-tools
+    apt-get install -y libav-tools && \
+    apt-get install -y git-all
 
 COPY . /sphere
 WORKDIR /sphere/cmd/env/gym
 RUN pip install -r requirements.txt
+
+RUN git clone https://github.com/pbarker/BitFlipper.git
+RUN pip install  -e ./BitFlipper
 
 EXPOSE 50051
 CMD xvfb-run -s "-screen 0 1400x900x24" python server.py
