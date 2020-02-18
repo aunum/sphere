@@ -86,7 +86,8 @@ class EnvironmentServer(EnvironmentAPIServicer):
             info.box.CopyFrom(BoxSpace(shape=space.shape))
             info.box.low.extend([(x if x != -np.inf else -1e100) for x in np.array(space.low ).flatten()])
             info.box.high.extend([(x if x != +np.inf else +1e100) for x in np.array(space.high).flatten()])
-            print(info.box)
+        elif name == 'MulitBinary':
+            info.multi_binary.CopyFrom(MultiBinary(n=space.n))
         return info
 
     def CreateEnv(self, request, context):
