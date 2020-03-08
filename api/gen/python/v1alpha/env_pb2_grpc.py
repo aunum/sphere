@@ -54,6 +54,11 @@ class EnvironmentAPIStub(object):
         request_serializer=env__pb2.SampleActionRequest.SerializeToString,
         response_deserializer=env__pb2.SampleActionResponse.FromString,
         )
+    self.RenderEnv = channel.unary_unary(
+        '/sphere.api.v1alpha.EnvironmentAPI/RenderEnv',
+        request_serializer=env__pb2.RenderEnvRequest.SerializeToString,
+        response_deserializer=env__pb2.RenderEnvResponse.FromString,
+        )
     self.StartRecordEnv = channel.unary_unary(
         '/sphere.api.v1alpha.EnvironmentAPI/StartRecordEnv',
         request_serializer=env__pb2.StartRecordEnvRequest.SerializeToString,
@@ -146,6 +151,13 @@ class EnvironmentAPIServicer(object):
     context.set_details('Method not implemented!')
     raise NotImplementedError('Method not implemented!')
 
+  def RenderEnv(self, request, context):
+    """RenderEnv the current environment state.
+    """
+    context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+    context.set_details('Method not implemented!')
+    raise NotImplementedError('Method not implemented!')
+
   def StartRecordEnv(self, request, context):
     """Start recording an environment.
     """
@@ -230,6 +242,11 @@ def add_EnvironmentAPIServicer_to_server(servicer, server):
           servicer.SampleAction,
           request_deserializer=env__pb2.SampleActionRequest.FromString,
           response_serializer=env__pb2.SampleActionResponse.SerializeToString,
+      ),
+      'RenderEnv': grpc.unary_unary_rpc_method_handler(
+          servicer.RenderEnv,
+          request_deserializer=env__pb2.RenderEnvRequest.FromString,
+          response_serializer=env__pb2.RenderEnvResponse.SerializeToString,
       ),
       'StartRecordEnv': grpc.unary_unary_rpc_method_handler(
           servicer.StartRecordEnv,

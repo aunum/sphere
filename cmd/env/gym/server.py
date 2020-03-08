@@ -2,6 +2,8 @@ from concurrent import futures
 from time import sleep
 from google.protobuf.timestamp_pb2 import Timestamp
 from google.protobuf.struct_pb2 import Struct
+from google.rpc import code_pb2, status_pb2, error_details_pb2
+from grpc_status import rpc_status
 import gym
 import gym_BitFlipper
 from gym import wrappers
@@ -10,7 +12,9 @@ import math
 import shutil
 import traceback
 import json
+import logging
 import uuid
+import sys
 import os
 import numpy as np
 
@@ -59,9 +63,11 @@ def encode_tensor(tensor):
     return Tensor(data=tensor.ravel(), shape=tensor.shape)
 
 class EnvironmentServer(EnvironmentAPIServicer):
-    def __init__(self):
+    def __init__(self, logger):
         self.envs = {}
         self.record = False
+
+        self.logger = logger
 
     def Info(self, request, context):
         return InfoResponse(server_name="gym")
@@ -86,12 +92,12 @@ class EnvironmentServer(EnvironmentAPIServicer):
             info.box.CopyFrom(BoxSpace(shape=space.shape))
             info.box.low.extend([(x if x != -np.inf else -1e100) for x in np.array(space.low ).flatten()])
             info.box.high.extend([(x if x != +np.inf else +1e100) for x in np.array(space.high).flatten()])
-        elif name == 'MulitBinary':
-            info.multi_binary.CopyFrom(MultiBinary(n=space.n))
+        elif name == 'MultiBinary':
+            info.multi_binary.CopyFrom(MultiBinarySpace(n=space.n))
         return info
 
     def CreateEnv(self, request, context):
-        print("creating env")
+        self.logger.info("creating env")
         id = str(uuid.uuid4())
         try:
             self.envs[id] = gym.make(request.model_name)
@@ -117,23 +123,33 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return GetEnvResponse(environment=self._get_env(request.id))
 
     def ResetEnv(self, request, context):
-        print("resetting env")
+        self.logger.info("resetting env")
         env = self.envs[request.id]
         observation = env.reset()
+        if not isinstance(observation, np.ndarray):
+            self.logger.debug("reshaping observation to tensor")
+            observation = np.array(observation)
         goal = Tensor()
         if hasattr(env, "goal"):
-            info["goal"] = encode_tensor(env.goal)
+            goal = encode_tensor(env.goal)
         return ResetEnvResponse(observation=encode_tensor(observation), goal=goal)
 
     def StepEnv(self, request, context):
-        print("stepping")
+        self.logger.info("stepping")
         env = self.envs[request.id]
         env.render()
         observation, reward, done, info = env.step(request.action)
+        if not isinstance(observation, np.ndarray):
+            self.logger.debug("reshaping observation to tensor")
+            observation = np.array(observation)
+        self.logger.info("observation")
+        self.logger.info(observation)
         observation = encode_tensor(observation)
         goal = Tensor()
         if hasattr(env, "goal"):
-            info["goal"] = encode_tensor(env.goal)
+            self.logger.info("goal")
+            self.logger.info(goal)
+            goal = encode_tensor(env.goal)
         s = Struct()
         s.update(info)
         return StepEnvResponse(observation=observation,
@@ -143,9 +159,14 @@ class EnvironmentServer(EnvironmentAPIServicer):
                           info=s)
 
     def SampleAction(self, request, context):
-        print("getting sample action")
         env = self.envs[request.id]
         return SampleActionResponse(value=env.action_space.sample())
+
+    def RenderEnv(self, request, context):
+        self.logger.info("rendering frame")
+        frame = env.render(mode='rgb_array')
+        self.logger.info("returning frame")
+        return RenderEnvResponse(frame=encode_tensor(frame))
 
     def StartRecordEnv(self, request, context):
         env = self.envs[request.id]
@@ -173,7 +194,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return get_results(request.id)
 
     def GetVideo(self, request, context):
-        print("getting video")
+        self.logger.info("getting video")
         chunk_size=1024
         dir = get_results_dir(request.id)
         video_file = ""
@@ -209,15 +230,25 @@ class EnvironmentServer(EnvironmentAPIServicer):
         env = self.envs[request.id]
         env.close()
         res_dir = get_results_dir(request.id)
-        shutil.rmtree(res_dir)
+        shutil.rmtree(res_dir, ignore_errors=True)
         del self.envs[request.id]
         return DeleteEnvResponse(message="deleted env")
 
 def serve(address='[::]:50051'):
+    logger = logging.getLogger('sphere')
+    str_hdlr = logging.StreamHandler(sys.stdout)
+    file_hdlr = logging.FileHandler('/var/tmp/sphere.log')
+    formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+    file_hdlr.setFormatter(formatter)
+    str_hdlr.setFormatter(formatter)
+    logger.addHandler(file_hdlr)
+    logger.addHandler(str_hdlr)
+    logger.setLevel(logging.DEBUG)
+
     server = grpc.server(futures.ThreadPoolExecutor(max_workers=1))
-    register(EnvironmentServer(), server)
+    register(EnvironmentServer(logger), server)
     server.add_insecure_port(address)
-    print('starting server at address ' + address)
+    logger.info('starting server at address ' + address)
     server.start()
     try:
         while True:
