@@ -4,6 +4,7 @@ from google.protobuf.timestamp_pb2 import Timestamp
 from google.protobuf.struct_pb2 import Struct
 from google.rpc import code_pb2, status_pb2, error_details_pb2
 from grpc_status import rpc_status
+from PIL import Image
 import gym
 import gym_BitFlipper
 from gym import wrappers
@@ -16,6 +17,7 @@ import logging
 import uuid
 import sys
 import os
+import io
 import numpy as np
 
 import sys
@@ -169,8 +171,14 @@ class EnvironmentServer(EnvironmentAPIServicer):
         env = self.envs[request.id]
         self.logger.info("rendering frame")
         frame = env.render(mode='rgb_array')
+        frame_im = Image.fromarray(frame)
+
+        imgByteArr = io.BytesIO()
+        frame_im.save(imgByteArr, format='PNG')
+        imgByteArr = imgByteArr.getvalue()
+
         self.logger.info("returning frame")
-        return RenderEnvResponse(image=encode_tensor(frame))
+        return RenderEnvResponse(frame=Image(data=imgByteArr, shape=frame.shape))
 
     def StartRecordEnv(self, request, context):
         env = self.envs[request.id]
