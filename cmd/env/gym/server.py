@@ -62,6 +62,9 @@ def get_results(env_id):
 def encode_tensor(tensor):
     return Tensor(data=tensor.ravel(), shape=tensor.shape)
 
+def encode_image(tensor):
+    return Image(data=tensor.ravel(), shape=tensor.shape)
+
 class EnvironmentServer(EnvironmentAPIServicer):
     def __init__(self, logger):
         self.envs = {}
@@ -163,10 +166,11 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return SampleActionResponse(value=env.action_space.sample())
 
     def RenderEnv(self, request, context):
+        env = self.envs[request.id]
         self.logger.info("rendering frame")
         frame = env.render(mode='rgb_array')
         self.logger.info("returning frame")
-        return RenderEnvResponse(frame=encode_tensor(frame))
+        return RenderEnvResponse(image=encode_tensor(frame))
 
     def StartRecordEnv(self, request, context):
         env = self.envs[request.id]
