@@ -4,7 +4,7 @@ from google.protobuf.timestamp_pb2 import Timestamp
 from google.protobuf.struct_pb2 import Struct
 from google.rpc import code_pb2, status_pb2, error_details_pb2
 from grpc_status import rpc_status
-from PIL import Image
+from PIL import Image as Im
 import gym
 import gym_BitFlipper
 from gym import wrappers
@@ -37,7 +37,6 @@ def get_results(env_id):
     episodes = {}
     for (root, _, filenames) in os.walk(dir):
         for i, f in enumerate(filenames):
-            print(f)
             if "stats.json" in f:
                 stats_file = os.path.join(root, f)
                 with open(stats_file) as json_file:
@@ -109,7 +108,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
         except IndexError:
             traceback.print_exc()
         env = self._get_env(id)
-        print(env)
+        self.logger.info(env)
         return CreateEnvResponse(environment=env)
 
     def ListEnvs(self, request, context):
@@ -128,7 +127,6 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return GetEnvResponse(environment=self._get_env(request.id))
 
     def ResetEnv(self, request, context):
-        self.logger.info("resetting env")
         env = self.envs[request.id]
         observation = env.reset()
         if not isinstance(observation, np.ndarray):
@@ -140,20 +138,15 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return ResetEnvResponse(observation=encode_tensor(observation), goal=goal)
 
     def StepEnv(self, request, context):
-        self.logger.info("stepping")
         env = self.envs[request.id]
         env.render()
         observation, reward, done, info = env.step(request.action)
         if not isinstance(observation, np.ndarray):
             self.logger.debug("reshaping observation to tensor")
             observation = np.array(observation)
-        self.logger.info("observation")
-        self.logger.info(observation)
         observation = encode_tensor(observation)
         goal = Tensor()
         if hasattr(env, "goal"):
-            self.logger.info("goal")
-            self.logger.info(goal)
             goal = encode_tensor(env.goal)
         s = Struct()
         s.update(info)
@@ -169,15 +162,14 @@ class EnvironmentServer(EnvironmentAPIServicer):
 
     def RenderEnv(self, request, context):
         env = self.envs[request.id]
-        self.logger.info("rendering frame")
+
         frame = env.render(mode='rgb_array')
-        frame_im = Image.fromarray(frame)
+        frame_im = Im.fromarray(frame, mode='RGB')
 
         imgByteArr = io.BytesIO()
-        frame_im.save(imgByteArr, format='PNG')
+        frame_im.save(imgByteArr, format='JPEG')
         imgByteArr = imgByteArr.getvalue()
 
-        self.logger.info("returning frame")
         return RenderEnvResponse(frame=Image(data=imgByteArr, shape=frame.shape))
 
     def StartRecordEnv(self, request, context):
@@ -201,12 +193,10 @@ class EnvironmentServer(EnvironmentAPIServicer):
         self.record = False
         return StopRecordEnvResponse(message="stopped recording environment")
 
-    # relevent https://stackoverflow.com/questions/40195740/how-to-run-openai-gym-render-over-a-server
     def Results(self, request, context):
         return get_results(request.id)
 
     def GetVideo(self, request, context):
-        self.logger.info("getting video")
         chunk_size=1024
         dir = get_results_dir(request.id)
         video_file = ""
@@ -215,7 +205,6 @@ class EnvironmentServer(EnvironmentAPIServicer):
                 filesuffix = "video" + str(request.episode_id).zfill(6) + ".mp4"
                 if filesuffix in f:
                     video_file = os.path.join(root, f)
-        # print(video_file)
         if video_file == "":
             context.set_code(grpc.StatusCode.NOT_FOUND)
             context.set_details('Video not found!')
