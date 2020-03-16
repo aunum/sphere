@@ -8,3 +8,4 @@ OpenAI Gym as a backend.
 ## Roadmap
 - [ ] Support toy text rendering
 - [ ] Support video and image state compression
+- [ ] Pybullet
