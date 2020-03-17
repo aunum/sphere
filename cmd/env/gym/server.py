@@ -105,6 +105,15 @@ class EnvironmentServer(EnvironmentAPIServicer):
         id = str(uuid.uuid4())
         try:
             self.envs[id] = gym.make(request.model_name)
+            if request.HasField("wrappers"):
+                wrappers = request.wrappers
+                if wrappers.HasField("deepmind_atari_wrapper"):
+                    self.logger.info("wrapping with deepmind atari")
+                    self.envs[id] = wrap_deepmind(self.envs[id], 
+                                                    episode_life=wrappers.episode_life, 
+                                                    clip_rewards=wrappers.clip_rewards, 
+                                                    frame_stack=wrappers.frame_stack, 
+                                                    scale=wrappers.scale)
         except IndexError:
             traceback.print_exc()
         env = self._get_env(id)
