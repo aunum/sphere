@@ -13,3 +13,6 @@ func (t *Tensor) Dense() *tensor.Dense {
 	tens := tensor.New(tensor.WithShape(shape...), tensor.WithBacking(t.Data))
 	return tens
 }
+
+// IsEnvWrapper exports the interface for env wrappers.
+type IsEnvWrapper = isEnvWrapper_Wrapper
