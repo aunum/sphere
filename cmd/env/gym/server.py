@@ -8,6 +8,7 @@ from PIL import Image as Im
 import gym
 import gym_BitFlipper
 from gym import wrappers
+from baselines_ext.atari_wrapper import wrap_deepmind
 import grpc
 import math
 import shutil
@@ -102,22 +103,28 @@ class EnvironmentServer(EnvironmentAPIServicer):
 
     def CreateEnv(self, request, context):
         self.logger.info("creating env")
+        self.logger.info(request)
+        self.logger.info("listing fields")
+        self.logger.info(request.ListFields())
         id = str(uuid.uuid4())
         try:
             self.envs[id] = gym.make(request.model_name)
-            if request.HasField("wrappers"):
-                wrappers = request.wrappers
-                if wrappers.HasField("deepmind_atari_wrapper"):
+            self.logger.info("created env")
+            for w in request.wrappers:
+                if w.HasField("deepmind_atari_wrapper"):
+                    self.logger.info("has atari wrapper")
+                    atari = w.deepmind_atari_wrapper
                     self.logger.info("wrapping with deepmind atari")
                     self.envs[id] = wrap_deepmind(self.envs[id], 
-                                                    episode_life=wrappers.episode_life, 
-                                                    clip_rewards=wrappers.clip_rewards, 
-                                                    frame_stack=wrappers.frame_stack, 
-                                                    scale=wrappers.scale)
+                                                    episode_life=atari.episode_life, 
+                                                    clip_rewards=atari.clip_rewards, 
+                                                    frame_stack=atari.frame_stack, 
+                                                    scale=atari.scale_float)
         except IndexError:
             traceback.print_exc()
         env = self._get_env(id)
         self.logger.info(env)
+        self.logger.info("returning env")
         return CreateEnvResponse(environment=env)
 
     def ListEnvs(self, request, context):
@@ -136,6 +143,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return GetEnvResponse(environment=self._get_env(request.id))
 
     def ResetEnv(self, request, context):
+        self.logger.info("resetting env")
         env = self.envs[request.id]
         observation = env.reset()
         if not isinstance(observation, np.ndarray):
@@ -147,6 +155,7 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return ResetEnvResponse(observation=encode_tensor(observation), goal=goal)
 
     def StepEnv(self, request, context):
+        self.logger.info("stepping env")
         env = self.envs[request.id]
         env.render()
         observation, reward, done, info = env.step(request.action)
