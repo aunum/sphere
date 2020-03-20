@@ -15,7 +15,7 @@ The API definitions are found in the [api package](./api).
 
 ## Examples
 
-There is a test example in [test/cartpole](./test/cartpole), there are many examples in [github.com/pbarker/go-rl](github.com/pbarker/go-rl).
+There is a test example in [test/cartpole](./test/cartpole), there are many examples in [github.com/aunum/gold](github.com/aunum/gold).
 
 ## Contibuting
 Please open an issue for any features/issues with the project.
