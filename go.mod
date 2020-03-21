@@ -1,4 +1,4 @@
-module github.com/pbarker/sphere
+module github.com/aunum/sphere
 
 go 1.13
 

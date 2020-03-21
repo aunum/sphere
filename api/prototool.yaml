@@ -9,7 +9,7 @@ generate:
   go_options:
     # The base import path. This should be the go path of the prototool.yaml file.
     # This is required if you have any go plugins.
-    import_path: github.com/pbarker/sphere/api
+    import_path: github.com/aunum/sphere/api
 
     # Extra modifiers to include with Mfile=package.
     extra_modifiers:

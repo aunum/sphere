@@ -26,4 +26,4 @@ RUN go get -d github.com/grpc-ecosystem/grpc-gateway/... && \
 RUN pip install --pre grpcio
 RUN pip install --pre grpcio-tools
 
-WORKDIR /go/src/github.com/pbarker/sphere
+WORKDIR /go/src/github.com/aunum/sphere
