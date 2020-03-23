@@ -104,17 +104,15 @@ class EnvironmentServer(EnvironmentAPIServicer):
     def CreateEnv(self, request, context):
         self.logger.info("creating env")
         self.logger.info(request)
-        self.logger.info("listing fields")
-        self.logger.info(request.ListFields())
         id = str(uuid.uuid4())
         try:
             self.envs[id] = gym.make(request.model_name)
-            self.logger.info("created env")
             for w in request.wrappers:
                 if w.HasField("deepmind_atari_wrapper"):
-                    self.logger.info("has atari wrapper")
+                    self.logger.debug("wrapping atari")
+                    self.envs[id] = NoopResetEnv(self.envs[id], noop_max=30)
+                    self.envs[id] = MaxAndSkipEnv(self.envs[id], skip=4)
                     atari = w.deepmind_atari_wrapper
-                    self.logger.info("wrapping with deepmind atari")
                     self.envs[id] = wrap_deepmind(self.envs[id], 
                                                     episode_life=atari.episode_life, 
                                                     clip_rewards=atari.clip_rewards, 
@@ -123,8 +121,6 @@ class EnvironmentServer(EnvironmentAPIServicer):
         except IndexError:
             traceback.print_exc()
         env = self._get_env(id)
-        self.logger.info(env)
-        self.logger.info("returning env")
         return CreateEnvResponse(environment=env)
 
     def ListEnvs(self, request, context):
@@ -143,7 +139,6 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return GetEnvResponse(environment=self._get_env(request.id))
 
     def ResetEnv(self, request, context):
-        self.logger.info("resetting env")
         env = self.envs[request.id]
         observation = env.reset()
         if not isinstance(observation, np.ndarray):
@@ -155,7 +150,6 @@ class EnvironmentServer(EnvironmentAPIServicer):
         return ResetEnvResponse(observation=encode_tensor(observation), goal=goal)
 
     def StepEnv(self, request, context):
-        self.logger.info("stepping env")
         env = self.envs[request.id]
         env.render()
         observation, reward, done, info = env.step(request.action)
