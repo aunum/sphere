@@ -8,7 +8,7 @@ Sphere provides HTTP+gRPC interfaces for reinforcement learning environments. It
 abstraction for RL backends that is accessible from any language. 
 
 ### Current Backends  
-* [Gym](https://gym.openai.com/)
+* [Gym](./cmd/env/gym)
 
 ## API
 The API definitions are found in the [api package](./api).
