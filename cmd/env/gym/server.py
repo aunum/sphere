@@ -8,7 +8,7 @@ from PIL import Image as Im
 import gym
 import gym_BitFlipper
 from gym import wrappers
-from baselines_ext.atari_wrapper import wrap_deepmind
+from baselines_ext.atari_wrapper import wrap_deepmind, NoopResetEnv, MaxAndSkipEnv
 import grpc
 import math
 import shutil
