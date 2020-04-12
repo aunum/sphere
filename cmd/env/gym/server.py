@@ -118,7 +118,9 @@ class EnvironmentServer(EnvironmentAPIServicer):
                                                     clip_rewards=atari.clip_rewards, 
                                                     frame_stack=atari.frame_stack, 
                                                     scale=atari.scale_float)
-        except IndexError:
+        except:
+            e = sys.exc_info()[0]
+            print(e)
             traceback.print_exc()
         env = self._get_env(id)
         return CreateEnvResponse(environment=env)
