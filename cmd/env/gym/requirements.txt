@@ -9,7 +9,6 @@ google-auth==1.9.0
 googleapis-common-protos==1.6.0
 grpcio==1.25.0
 grpcio-status
-gym==0.15.4
 idna==2.8
 imageio==2.6.1
 numpy==1.17.4
